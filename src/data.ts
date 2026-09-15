@@ -143,10 +143,6 @@ export const DIRECTION_LABELS: Record<Direction, string> = {
   harm: 'Favoured comparator',
 }
 
-export function domainTrialCount(d: Domain): number {
-  return trials.filter((t) => t.domain === d).length
-}
-
 export function trialById(id: string): Trial | undefined {
   return trials.find((t) => t.id === id)
 }
@@ -157,11 +153,13 @@ export interface TrialIndexEntry {
   acronym: string
   short_label: string
   year: number | null
+  journal: string
   domain: Domain
   design: string
   intervention: string
   comparators: string[]
   n: number | null
+  primary_endpoint: string
   metric: string
   value: number | null
   ci_low: number | null
@@ -170,6 +168,7 @@ export interface TrialIndexEntry {
   direction: Direction
   plottable: boolean
   key_finding: string
+  source_file: string
 }
 
 export const trialIndex: TrialIndexEntry[] = trials.map((t) => ({
@@ -177,11 +176,13 @@ export const trialIndex: TrialIndexEntry[] = trials.map((t) => ({
   acronym: t.acronym,
   short_label: t.short_label,
   year: t.year,
+  journal: t.journal,
   domain: t.domain,
   design: t.design,
   intervention: t.intervention,
   comparators: t.comparators,
   n: t.n,
+  primary_endpoint: t.primary_endpoint,
   metric: t.primary_effect.metric,
   value: t.primary_effect.value,
   ci_low: t.primary_effect.ci_low,
@@ -190,36 +191,12 @@ export const trialIndex: TrialIndexEntry[] = trials.map((t) => ({
   direction: t.primary_effect.direction,
   plottable: isPlottable(t),
   key_finding: t.key_finding_oneliner,
+  source_file: t.source_file,
 }))
-
-export function formatEffect(t: Trial | TrialIndexEntry): string {
-  const metric = t.metric ?? (t as Trial).primary_effect.metric
-  const { value, ci_low, ci_high } = 'primary_effect' in t ? t.primary_effect : t
-  if (value === null) return 'not reported'
-  const ci = ci_low !== null && ci_high !== null ? ` (95% CI ${ci_low}–${ci_high})` : ''
-  return `${metric} ${value}${ci}`
-}
 
 export function formatNumber(n: number | null): string {
   if (n === null) return '—'
   return n.toLocaleString('en-US')
-}
-
-/** Percentage reduction/increase relative to 1.0, for ratio metrics only. */
-export function relativeChange(t: Trial): string | null {
-  const p = t.primary_effect
-  if (p.value === null || !RATIO_METRICS.has(p.metric)) return null
-  const delta = Math.round((1 - p.value) * 100)
-  if (delta === 0) return 'no difference'
-  return delta > 0 ? `${delta}% relative reduction` : `${Math.abs(delta)}% relative increase`
-}
-
-export function allJournals(): string[] {
-  return [...new Set(trials.map((t) => t.journal).filter(Boolean))].sort()
-}
-
-export function allDesigns(): string[] {
-  return [...new Set(trials.map((t) => t.design))].sort()
 }
 
 // ---------------------------------------------------------------- quiz engine
@@ -359,11 +336,4 @@ export function buildQuiz(count = 10, seed = 42): QuizQuestion[] {
     }
   }
   return questions.slice(0, count)
-}
-
-/** Structured comparison rows for the side-by-side view. */
-export interface ComparisonField {
-  label: string
-  values: (string | null)[]
-  numeric?: (number | null)[]
 }

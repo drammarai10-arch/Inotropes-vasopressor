@@ -23,6 +23,7 @@ import {
   DOMAIN_ORDER,
   type Domain,
 } from './data'
+import { DIRECTION_LABELS, DESIGN_LABELS, BLINDING_LABELS, MULTICENTER_LABELS } from './labels'
 
 const app = new Hono()
 
@@ -34,12 +35,19 @@ app.get('/api/health', (c) =>
   c.json({ ok: true, trials: trials.length, built: meta.built })
 )
 
-/** Dataset metadata: counts, distributions and verification statistics. */
+/**
+ * Dataset metadata: counts, distributions, verification statistics and every
+ * enum label map the client needs to render a coded value as prose.
+ */
 app.get('/api/meta', (c) =>
   c.json({
     ...meta,
     domain_labels: DOMAIN_LABELS,
     domain_order: DOMAIN_ORDER,
+    direction_labels: DIRECTION_LABELS,
+    design_labels: DESIGN_LABELS,
+    blinding_labels: BLINDING_LABELS,
+    multicenter_labels: MULTICENTER_LABELS,
     source_documents_ingested: 91,
     duplicates_removed: 5,
     plottable_effect_sizes: trials.filter(isPlottable).length,
