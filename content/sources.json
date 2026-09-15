@@ -1,0 +1,538 @@
+{
+  "sources": [
+    {
+      "source_file": "VHEFT_1986.pdf",
+      "trial_id": "v-heft",
+      "bytes": 1013383,
+      "sha256": "7021d58e2c8ba4e9"
+    },
+    {
+      "source_file": "VHeFT II_1991.pdf",
+      "trial_id": "v-heft-ii",
+      "bytes": 1314136,
+      "sha256": "ea2cc3feb4dfeb77"
+    },
+    {
+      "source_file": "SAVE trial_NEJM_1992.pdf",
+      "trial_id": "save",
+      "bytes": 1542919,
+      "sha256": "35fe5322b9491fc8"
+    },
+    {
+      "source_file": "AIRE_1993.pdf",
+      "trial_id": "aire",
+      "bytes": 1240730,
+      "sha256": "01b16b554ea73bc5"
+    },
+    {
+      "source_file": "WOSCOPS trial_1995.pdf",
+      "trial_id": "woscops",
+      "bytes": 151836,
+      "sha256": "f123cd3c5eac38eb"
+    },
+    {
+      "source_file": "DIG_1997_NEJM.pdf",
+      "trial_id": "dig",
+      "bytes": 192768,
+      "sha256": "0fe57d1bbd1358c1"
+    },
+    {
+      "source_file": "Elite_1997.pdf",
+      "trial_id": "elite",
+      "bytes": 101525,
+      "sha256": "f4d8c251f684e78c"
+    },
+    {
+      "source_file": "AFCAPS trial_1998.pdf",
+      "trial_id": "afcaps-texcaps",
+      "bytes": 137079,
+      "sha256": "0e2cee4db67bb70e"
+    },
+    {
+      "source_file": "ATLAS trial.pdf",
+      "trial_id": "atlas",
+      "bytes": 150144,
+      "sha256": "54930a67f03fb0c0"
+    },
+    {
+      "source_file": "CIBIS-II.pdf",
+      "trial_id": "cibis-ii",
+      "bytes": 78751,
+      "sha256": "af087b5cbeb54aff"
+    },
+    {
+      "source_file": "MERIT.pdf",
+      "trial_id": "merit-hf",
+      "bytes": 186448,
+      "sha256": "11b46539a11ffa2c"
+    },
+    {
+      "source_file": "RALES trial_NEJM_1999.pdf",
+      "trial_id": "rales",
+      "bytes": 210680,
+      "sha256": "e7985e05232bae0c"
+    },
+    {
+      "source_file": "HOPE trial_2000.pdf",
+      "trial_id": "hope",
+      "bytes": 194574,
+      "sha256": "6585c5b5395a30ab"
+    },
+    {
+      "source_file": "CURE trial.pdf",
+      "trial_id": "cure",
+      "bytes": 136495,
+      "sha256": "05433b79832b4bcb"
+    },
+    {
+      "source_file": "MIRACL_JAMA_2001.pdf",
+      "trial_id": "miracl",
+      "bytes": 226239,
+      "sha256": "d5ef074e96423e80"
+    },
+    {
+      "source_file": "ValHeFT_2001.pdf",
+      "trial_id": "val-heft",
+      "bytes": 125541,
+      "sha256": "ce6ce6177c7c693b"
+    },
+    {
+      "source_file": "AFFIRM_2002.pdf",
+      "trial_id": "affirm",
+      "bytes": 201890,
+      "sha256": "e6524a3785dc4981"
+    },
+    {
+      "source_file": "COPERNICUS.pdf",
+      "trial_id": "copernicus",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "source_file": "ASCOT trial.pdf",
+      "trial_id": "ascot-lla",
+      "bytes": 201711,
+      "sha256": "b0885c630ea43598"
+    },
+    {
+      "source_file": "CHARM added_2003.pdf",
+      "trial_id": "charm-added",
+      "bytes": 92195,
+      "sha256": "e37fbe37244fc6f7"
+    },
+    {
+      "source_file": "CHARM alternate_2003.pdf",
+      "trial_id": "charm-alternative",
+      "bytes": 95543,
+      "sha256": "527d875f5e2d7566"
+    },
+    {
+      "source_file": "CHARM overall_2003.pdf",
+      "trial_id": "charm-overall",
+      "bytes": 126869,
+      "sha256": "a77361e592627f13"
+    },
+    {
+      "source_file": "COMET.pdf",
+      "trial_id": "comet",
+      "bytes": 160280,
+      "sha256": "c0bb301461f4ddf8"
+    },
+    {
+      "source_file": "EPHESUS_NEJM_2003.pdf",
+      "trial_id": "ephesus",
+      "bytes": 150743,
+      "sha256": "9674f7dd52e3911f"
+    },
+    {
+      "source_file": "EUROPA trial_2003.pdf",
+      "trial_id": "europa",
+      "bytes": 141081,
+      "sha256": "2ff31965c850e8f1"
+    },
+    {
+      "source_file": "VALIANT trial_2003.pdf",
+      "trial_id": "valiant",
+      "bytes": 168154,
+      "sha256": "797d95602c1dd4e4"
+    },
+    {
+      "source_file": "AHEFT_2004.pdf",
+      "trial_id": "a-heft",
+      "bytes": 118448,
+      "sha256": "ec3ba5aaa5955962"
+    },
+    {
+      "source_file": "CARDS trial_2004.pdf",
+      "trial_id": "cards",
+      "bytes": 177468,
+      "sha256": "d9138c7dc40b3644"
+    },
+    {
+      "source_file": "PEACE_2004.pdf",
+      "trial_id": "peace",
+      "bytes": 113293,
+      "sha256": "b278f4a611cf72d1"
+    },
+    {
+      "source_file": "PROVE IT trial_2004.pdf",
+      "trial_id": "prove-it-timi-22",
+      "bytes": 125164,
+      "sha256": "7f8a757d0d5df05b"
+    },
+    {
+      "source_file": "STELLAR trial.pdf",
+      "trial_id": "stellar",
+      "bytes": 938924,
+      "sha256": "2e2d47a7a0fcd22e"
+    },
+    {
+      "source_file": "COMMIT-BB trial_Lancet_2005.pdf",
+      "trial_id": "commit",
+      "bytes": 129272,
+      "sha256": "e3043aeeb8b7e914"
+    },
+    {
+      "source_file": "IDEAL trial.pdf",
+      "trial_id": "ideal",
+      "bytes": 261441,
+      "sha256": "52cb4b12566b011a"
+    },
+    {
+      "source_file": "CHARISMA_2006.pdf",
+      "trial_id": "charisma",
+      "bytes": 229152,
+      "sha256": "87a104532f8d9a30"
+    },
+    {
+      "source_file": "MEGA_2006.pdf",
+      "trial_id": "mega-study",
+      "bytes": 187051,
+      "sha256": "3e22ad56322faa95"
+    },
+    {
+      "source_file": "CORONA trial_Rosuvastatin.pdf",
+      "trial_id": "corona",
+      "bytes": 234255,
+      "sha256": "9a82120ea63a60b8"
+    },
+    {
+      "source_file": "ADONIS trial_2007.pdf",
+      "trial_id": "euridis-adonis",
+      "bytes": 406508,
+      "sha256": "abb953281dda91bb"
+    },
+    {
+      "source_file": "TRITON.pdf",
+      "trial_id": "triton-timi-38-2007",
+      "bytes": 308757,
+      "sha256": "9f309826d39f096f"
+    },
+    {
+      "source_file": "ANDROMEDA trial_2008.pdf",
+      "trial_id": "andromeda",
+      "bytes": 191519,
+      "sha256": "29136fb18f5eb1c6"
+    },
+    {
+      "source_file": "GISSI-HF_2008.pdf",
+      "trial_id": "gissi-hf",
+      "bytes": 160236,
+      "sha256": "da83e601e36fe20f"
+    },
+    {
+      "source_file": "JUPITER trial_2008.pdf",
+      "trial_id": "jupiter",
+      "bytes": 390123,
+      "sha256": "26f8d2d2b8db48bf"
+    },
+    {
+      "source_file": "ONTARGET trial_NEJM_2008_ACE plus ARB.pdf",
+      "trial_id": "ontarget",
+      "bytes": 486930,
+      "sha256": "d6036cb40b57263a"
+    },
+    {
+      "source_file": "APPRAISE I (2).pdf",
+      "trial_id": "appraise",
+      "bytes": 564122,
+      "sha256": "af28246f251b4b78"
+    },
+    {
+      "source_file": "APPRAISE I.pdf",
+      "trial_id": "appraise-2009",
+      "bytes": 566592,
+      "sha256": "8eb2b6f5ad9af826"
+    },
+    {
+      "source_file": "ATHENA_2009.pdf",
+      "trial_id": "athena",
+      "bytes": 713721,
+      "sha256": "adb5a7ecc3a8877d"
+    },
+    {
+      "source_file": "ATLAS TIMI 46 (2).pdf",
+      "trial_id": "atlas-acs-timi-46",
+      "bytes": 271687,
+      "sha256": "067616e82d13435c"
+    },
+    {
+      "source_file": "ATLAS TIMI 46.pdf",
+      "trial_id": "atlas-acs-timi-46-2009",
+      "bytes": 273956,
+      "sha256": "25742f8877e02483"
+    },
+    {
+      "source_file": "HEAAL_2009.pdf",
+      "trial_id": "heaal",
+      "bytes": 248663,
+      "sha256": "86f4b0ae3d87756d"
+    },
+    {
+      "source_file": "PLATO2009.pdf",
+      "trial_id": "plato",
+      "bytes": 394611,
+      "sha256": "84012e06a518eb5f"
+    },
+    {
+      "source_file": "RELY Trial.pdf",
+      "trial_id": "re-ly",
+      "bytes": 361520,
+      "sha256": "2d5a90a2e911bc0a"
+    },
+    {
+      "source_file": "CURRENT OASIS-PCI_2010.pdf",
+      "trial_id": "current-oasis-7",
+      "bytes": 346786,
+      "sha256": "40e47333090439f5"
+    },
+    {
+      "source_file": "PLATO2010.pdf",
+      "trial_id": "plato-2010",
+      "bytes": 269633,
+      "sha256": "8dc9cfe3fa437d6b"
+    },
+    {
+      "source_file": "RACE II_2010.pdf",
+      "trial_id": "race-ii",
+      "bytes": 328277,
+      "sha256": "90cea9a8ce70ccbf"
+    },
+    {
+      "source_file": "SHIFT_the Lancet.pdf",
+      "trial_id": "shift-2010",
+      "bytes": 422241,
+      "sha256": "a4a5810470142b7a"
+    },
+    {
+      "source_file": "TRITON NSTEMI substudy.pdf",
+      "trial_id": "triton-timi-38",
+      "bytes": 200248,
+      "sha256": "37b27e2042d3c244"
+    },
+    {
+      "source_file": "APPRAISE II (2).pdf",
+      "trial_id": "appraise-2",
+      "bytes": 613663,
+      "sha256": "8354a95ec17ac6d7"
+    },
+    {
+      "source_file": "APPRAISE II.pdf",
+      "trial_id": "appraise-2-2011",
+      "bytes": 598720,
+      "sha256": "e07bf60717024df6"
+    },
+    {
+      "source_file": "ARISTOTLE.pdf",
+      "trial_id": "aristotle",
+      "bytes": 734376,
+      "sha256": "6ee88ecf0ceca53a"
+    },
+    {
+      "source_file": "DOSE trial_NEJM_2011.pdf",
+      "trial_id": "dose",
+      "bytes": 442645,
+      "sha256": "fa642df87466c43f"
+    },
+    {
+      "source_file": "EMPHASIS_NEJM_2011.pdf",
+      "trial_id": "emphasis-hf",
+      "bytes": 496011,
+      "sha256": "a216b44ef8edb14b"
+    },
+    {
+      "source_file": "REDEEM trial (2).pdf",
+      "trial_id": "re-deem",
+      "bytes": 324800,
+      "sha256": "518129b6e0f8e5c5"
+    },
+    {
+      "source_file": "REDEEM trial.pdf",
+      "trial_id": "re-deem-2011",
+      "bytes": 334298,
+      "sha256": "2ba9ca93cec0e15b"
+    },
+    {
+      "source_file": "ROCKET trial.pdf",
+      "trial_id": "rocket-af",
+      "bytes": 714807,
+      "sha256": "1184a9b83a1db8e8"
+    },
+    {
+      "source_file": "ROCKET-AF.pdf",
+      "trial_id": "rocket-af-2011",
+      "bytes": 752094,
+      "sha256": "8fc14887f12e93dd"
+    },
+    {
+      "source_file": "Ivabradine_SHIFT and BEAUTIFUL.pdf",
+      "trial_id": "shift",
+      "bytes": 500600,
+      "sha256": "41a91af88d2653d5"
+    },
+    {
+      "source_file": "ATLAS TMI 51 (2).pdf",
+      "trial_id": "atlas-acs-2-timi-51",
+      "bytes": 795947,
+      "sha256": "be2b09ccd8758dbc"
+    },
+    {
+      "source_file": "ATLAS TMI 51.pdf",
+      "trial_id": "atlas-acs-2-timi-51-2012",
+      "bytes": 742101,
+      "sha256": "7c771e93f7cc01ff"
+    },
+    {
+      "source_file": "CTT Meta-analysis_2012.pdf",
+      "trial_id": "ctt-collaborators",
+      "bytes": 426051,
+      "sha256": "037d38ee607796d3"
+    },
+    {
+      "source_file": "Trilogy trial.pdf",
+      "trial_id": "trilogy-acs",
+      "bytes": 641228,
+      "sha256": "48a3779f1536437c"
+    },
+    {
+      "source_file": "ENGAGE.pdf",
+      "trial_id": "engage-af-timi-48",
+      "bytes": 646835,
+      "sha256": "6ada39c4cfb4429d"
+    },
+    {
+      "source_file": "DAPT_2014.pdf",
+      "trial_id": "dapt",
+      "bytes": 645501,
+      "sha256": "87964af38fc35eec"
+    },
+    {
+      "source_file": "PARADIGM-HF.pdf",
+      "trial_id": "paradigm-hf",
+      "bytes": 690792,
+      "sha256": "6120b006570f7f19"
+    },
+    {
+      "source_file": "TOPCAT_NEJM_2014.pdf",
+      "trial_id": "topcat",
+      "bytes": 821341,
+      "sha256": "60f7be75dd178871"
+    },
+    {
+      "source_file": "IMPROVE-IT trial_2015.pdf",
+      "trial_id": "improve-it",
+      "bytes": 599846,
+      "sha256": "b45faaf5cde09829"
+    },
+    {
+      "source_file": "PEGASUS_NEJM_2015.pdf",
+      "trial_id": "pegasus-timi-54",
+      "bytes": 536648,
+      "sha256": "702bc702d4be5d15"
+    },
+    {
+      "source_file": "PIONEER trial.pdf",
+      "trial_id": "pioneer-af-pci",
+      "bytes": 303393,
+      "sha256": "5a7e7c4a5e7feee9"
+    },
+    {
+      "source_file": "REDUAL trial.pdf",
+      "trial_id": "re-dual-pci",
+      "bytes": 365059,
+      "sha256": "e982f8eb428e332e"
+    },
+    {
+      "source_file": "AFIRE trial_2019_AC in stable CAD.pdf",
+      "trial_id": "afire",
+      "bytes": 381757,
+      "sha256": "0819376b67f518db"
+    },
+    {
+      "source_file": "AUGUSTUS trial_2019.pdf",
+      "trial_id": "augustus",
+      "bytes": 524550,
+      "sha256": "f0ab34500100472c"
+    },
+    {
+      "source_file": "DAPA-HF_NEJM_2019.pdf",
+      "trial_id": "dapa-hf",
+      "bytes": 434806,
+      "sha256": "394e0a4e9c458ecb"
+    },
+    {
+      "source_file": "EAST AFNET-4_rate vs. rhythm control_NEJM_2020.pdf",
+      "trial_id": "east-afnet-4",
+      "bytes": 946752,
+      "sha256": "ca6c1351a27a1846"
+    },
+    {
+      "source_file": "EMPEROR-reduced_NEJM_2020.pdf",
+      "trial_id": "emperor-reduced",
+      "bytes": 685339,
+      "sha256": "0cdf4aa126bf57bb"
+    },
+    {
+      "source_file": "Empa_HFpEF_EMPEROR-Preserved_NEJM_2021.pdf",
+      "trial_id": "emperor-preserved",
+      "bytes": 672540,
+      "sha256": "6de2b1a6c669e7ec"
+    },
+    {
+      "source_file": "ADVOR trial.pdf",
+      "trial_id": "advor",
+      "bytes": 707925,
+      "sha256": "9283aaa47eac36c6"
+    },
+    {
+      "source_file": "Dapa_HfpEF_DELIVER_NEJM.pdf",
+      "trial_id": "deliver",
+      "bytes": 624244,
+      "sha256": "803a1c69fdd99618"
+    },
+    {
+      "source_file": "DAPA-MI trial_NEJM_Full Text.pdf",
+      "trial_id": "dapa-mi",
+      "bytes": 884478,
+      "sha256": "4a707ef5d6d73a46"
+    },
+    {
+      "source_file": "EMPACT-MI trial_NEJM_2024.pdf",
+      "trial_id": "empact-mi",
+      "bytes": 587779,
+      "sha256": "526e84571cf2a30a"
+    },
+    {
+      "source_file": "DIGIT HF_2025.pdf",
+      "trial_id": "digit-hf",
+      "bytes": 4466056,
+      "sha256": "b6861bf8b891a95b"
+    },
+    {
+      "source_file": "Digoxin in HF_Decision Trial_2026.pdf",
+      "trial_id": "decision",
+      "bytes": 5108864,
+      "sha256": "f5dae3dde14402ea"
+    }
+  ]
+}

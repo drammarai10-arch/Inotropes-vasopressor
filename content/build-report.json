@@ -1,0 +1,31 @@
+{
+  "records_in": 91,
+  "trials_out": 89,
+  "dropped_or_flagged": 22,
+  "missing_sources": [],
+  "multi_record_sources": [],
+  "warnings": [
+    "AHEFT_2004.pdf: no numeric primary effect (direction=benefit)",
+    "APPRAISE I.pdf: acronym collision → id \"appraise-2009\"",
+    "APPRAISE II.pdf: acronym collision → id \"appraise-2-2011\"",
+    "ATLAS TIMI 46.pdf: acronym collision → id \"atlas-acs-timi-46-2009\"",
+    "ATLAS TMI 51.pdf: acronym collision → id \"atlas-acs-2-timi-51-2012\"",
+    "ATLAS trial.pdf: no numeric primary effect (direction=neutral)",
+    "DOSE trial_NEJM_2011.pdf: no numeric primary effect (direction=neutral)",
+    "PLATO2010.pdf: acronym collision → id \"plato-2010\"",
+    "PROVE IT trial_2004.pdf: no numeric primary effect (direction=benefit)",
+    "RACE II_2010.pdf: no numeric primary effect (direction=neutral)",
+    "REDEEM trial.pdf: acronym collision → id \"re-deem-2011\"",
+    "RELY trial_appendix.pdf: acronym collision → id \"re-ly-2009\"",
+    "RELY trial_appendix.pdf: dropped — no primary endpoint and no effect size",
+    "ROCKET-AF.pdf: acronym collision → id \"rocket-af-2011\"",
+    "ROCKET_appendix.pdf: acronym collision → id \"rocket-af-2011-2\"",
+    "ROCKET_appendix.pdf: dropped — no primary endpoint and no effect size",
+    "SHIFT_the Lancet.pdf: acronym collision → id \"shift-2010\"",
+    "STELLAR trial.pdf.direction: value \"not_stated\" not in enum → neutral",
+    "STELLAR trial.pdf: no numeric primary effect (direction=neutral)",
+    "TRITON.pdf: acronym collision → id \"triton-timi-38-2007\"",
+    "VHEFT_1986.pdf: no numeric primary effect (direction=neutral)",
+    "VHeFT II_1991.pdf: no numeric primary effect (direction=benefit)"
+  ]
+}

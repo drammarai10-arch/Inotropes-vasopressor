@@ -1,0 +1,369 @@
+/**
+ * Data layer for the Cardiovascular Outcomes Trial Evidence Base.
+ *
+ * The dataset is produced by the extraction pipeline in `pipeline/` and is
+ * import-time verified: every numeric field carries a `provenance` verdict
+ * ('verified' | 'derived' | 'absent') established by string-matching the value
+ * against its source document text. See pipeline/verify.mjs.
+ */
+import dataset from '../content/trials.json'
+
+export type Domain =
+  | 'lipids'
+  | 'hf'
+  | 'acs_antiplatelet'
+  | 'acs_anticoag'
+  | 'af_anticoag'
+  | 'raas'
+  | 'other'
+
+export type Direction = 'benefit' | 'harm' | 'neutral'
+export type Provenance = 'verified' | 'derived' | 'absent' | 'unverified'
+
+export interface SecondaryResult {
+  endpoint: string
+  metric: string | null
+  value: number | null
+  ci_low: number | null
+  ci_high: number | null
+  p_value: string | null
+  direction: Direction
+  note: string | null
+}
+
+export interface PrimaryEffect {
+  metric: string
+  value: number | null
+  ci_low: number | null
+  ci_high: number | null
+  p_value: string | null
+  direction: Direction
+  event_rate_intervention: string | null
+  event_rate_comparator: string | null
+}
+
+export interface Trial {
+  id: string
+  acronym: string
+  title: string
+  short_label: string
+  year: number | null
+  journal: string
+  doi: string | null
+  registration: string | null
+  domain: Domain
+  design: string
+  is_substudy: boolean
+  blinding: string
+  multicenter: string
+  phase: string | null
+  population: string
+  n: number | null
+  n_note: string | null
+  intervention: string
+  comparators: string[]
+  primary_endpoint: string
+  primary_effect: PrimaryEffect
+  secondary_results: SecondaryResult[]
+  follow_up: string | null
+  conclusion: string
+  safety_signals: string[]
+  key_finding_oneliner: string
+  limitations: string[]
+  citation: string
+  evidence_quotes: string[]
+  extraction_confidence: 'high' | 'medium' | 'low'
+  extraction_notes: string | null
+  source_file: string
+  source_chars: number | null
+  provenance: Record<string, Provenance>
+  verified_fully: boolean
+}
+
+export interface DatasetMeta {
+  title: string
+  built: string
+  source_documents: number
+  unique_trials: number
+  years: [number, number]
+  total_participants: number
+  by_domain: Record<string, number>
+  by_design: Record<string, number>
+  by_period: Record<string, number>
+  by_direction: Record<string, number>
+  verified_effect_sizes: number
+  verified_sample_sizes: number
+  derived_sample_sizes: number
+  unverified_fields: number
+}
+
+const DATA = dataset as unknown as { meta: DatasetMeta; trials: Trial[] }
+
+export const meta: DatasetMeta = DATA.meta
+export const trials: Trial[] = DATA.trials
+
+/** Ratio metrics can be plotted on a log scale; 'other' metrics cannot. */
+const RATIO_METRICS = new Set(['HR', 'RR', 'OR', 'IRR'])
+
+export function isPlottable(t: Trial): boolean {
+  const p = t.primary_effect
+  return (
+    RATIO_METRICS.has(p.metric) &&
+    p.value !== null &&
+    p.ci_low !== null &&
+    p.ci_high !== null &&
+    p.value > 0 &&
+    p.ci_low > 0
+  )
+}
+
+export const DOMAIN_LABELS: Record<Domain, string> = {
+  lipids: 'Lipids & atherosclerosis',
+  hf: 'Heart failure',
+  acs_antiplatelet: 'ACS · antiplatelet',
+  acs_anticoag: 'ACS · anticoagulant',
+  af_anticoag: 'Atrial fibrillation · anticoagulant',
+  raas: 'RAAS / secondary prevention',
+  other: 'Other',
+}
+
+export const DOMAIN_ORDER: Domain[] = [
+  'lipids',
+  'hf',
+  'acs_antiplatelet',
+  'acs_anticoag',
+  'af_anticoag',
+  'raas',
+  'other',
+]
+
+export const DIRECTION_LABELS: Record<Direction, string> = {
+  benefit: 'Favoured intervention',
+  neutral: 'Neutral / no difference',
+  harm: 'Favoured comparator',
+}
+
+export function domainTrialCount(d: Domain): number {
+  return trials.filter((t) => t.domain === d).length
+}
+
+export function trialById(id: string): Trial | undefined {
+  return trials.find((t) => t.id === id)
+}
+
+/** Compact projection for list views, the forest plot and API list responses. */
+export interface TrialIndexEntry {
+  id: string
+  acronym: string
+  short_label: string
+  year: number | null
+  domain: Domain
+  design: string
+  intervention: string
+  comparators: string[]
+  n: number | null
+  metric: string
+  value: number | null
+  ci_low: number | null
+  ci_high: number | null
+  p_value: string | null
+  direction: Direction
+  plottable: boolean
+  key_finding: string
+}
+
+export const trialIndex: TrialIndexEntry[] = trials.map((t) => ({
+  id: t.id,
+  acronym: t.acronym,
+  short_label: t.short_label,
+  year: t.year,
+  domain: t.domain,
+  design: t.design,
+  intervention: t.intervention,
+  comparators: t.comparators,
+  n: t.n,
+  metric: t.primary_effect.metric,
+  value: t.primary_effect.value,
+  ci_low: t.primary_effect.ci_low,
+  ci_high: t.primary_effect.ci_high,
+  p_value: t.primary_effect.p_value,
+  direction: t.primary_effect.direction,
+  plottable: isPlottable(t),
+  key_finding: t.key_finding_oneliner,
+}))
+
+export function formatEffect(t: Trial | TrialIndexEntry): string {
+  const metric = t.metric ?? (t as Trial).primary_effect.metric
+  const { value, ci_low, ci_high } = 'primary_effect' in t ? t.primary_effect : t
+  if (value === null) return 'not reported'
+  const ci = ci_low !== null && ci_high !== null ? ` (95% CI ${ci_low}–${ci_high})` : ''
+  return `${metric} ${value}${ci}`
+}
+
+export function formatNumber(n: number | null): string {
+  if (n === null) return '—'
+  return n.toLocaleString('en-US')
+}
+
+/** Percentage reduction/increase relative to 1.0, for ratio metrics only. */
+export function relativeChange(t: Trial): string | null {
+  const p = t.primary_effect
+  if (p.value === null || !RATIO_METRICS.has(p.metric)) return null
+  const delta = Math.round((1 - p.value) * 100)
+  if (delta === 0) return 'no difference'
+  return delta > 0 ? `${delta}% relative reduction` : `${Math.abs(delta)}% relative increase`
+}
+
+export function allJournals(): string[] {
+  return [...new Set(trials.map((t) => t.journal).filter(Boolean))].sort()
+}
+
+export function allDesigns(): string[] {
+  return [...new Set(trials.map((t) => t.design))].sort()
+}
+
+// ---------------------------------------------------------------- quiz engine
+
+export interface QuizQuestion {
+  id: string
+  kind: 'effect' | 'population' | 'domain' | 'year' | 'direction'
+  prompt: string
+  context: string | null
+  options: string[]
+  answer: number
+  explanation: string
+  trial_id: string
+}
+
+/** Deterministic PRNG so a given seed always yields the same quiz. */
+function mulberry32(seed: number) {
+  return function () {
+    seed |= 0
+    seed = (seed + 0x6d2b79f5) | 0
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function shuffle<T>(arr: T[], rnd: () => number): T[] {
+  const a = arr.slice()
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+/**
+ * Builds a quiz strictly from extracted, source-verified facts.
+ * Only trials whose primary effect is verified are eligible for numeric questions.
+ */
+export function buildQuiz(count = 10, seed = 42): QuizQuestion[] {
+  const rnd = mulberry32(seed)
+  const pool = trials.filter((t) => t.provenance.value === 'verified' || t.provenance.value === 'absent')
+  const questions: QuizQuestion[] = []
+
+  const numeric = shuffle(
+    trials.filter((t) => isPlottable(t) && t.provenance.value === 'verified'),
+    rnd
+  )
+  const all = shuffle(trials.filter((t) => t.primary_endpoint.length > 10), rnd)
+
+  let ni = 0
+  while (questions.length < count && (ni < numeric.length || questions.length < all.length)) {
+    const kind = questions.length % 4
+    if (kind === 0 && ni < numeric.length) {
+      const t = numeric[ni++]
+      const p = t.primary_effect
+      const correct = `${p.metric} ${p.value} (95% CI ${p.ci_low}–${p.ci_high})`
+      const decoys = new Set<string>()
+      while (decoys.size < 3) {
+        const jitter = 0.6 + rnd() * 0.8
+        const v = Math.round(p.value! * jitter * 100) / 100
+        if (v !== p.value && v > 0.05 && v < 5) decoys.add(`${p.metric} ${v} (95% CI —)`)
+      }
+      const options = shuffle([correct, ...decoys], rnd)
+      questions.push({
+        id: `effect-${t.id}`,
+        kind: 'effect',
+        prompt: `What was the reported primary result of ${t.acronym}?`,
+        context: t.short_label || t.title,
+        options,
+        answer: options.indexOf(correct),
+        explanation: `${t.acronym} (${t.year}) — ${t.primary_endpoint} Primary result: ${correct}${
+          p.p_value ? `, P ${p.p_value}` : ''
+        }. Source: ${t.source_file}.`,
+        trial_id: t.id,
+      })
+      continue
+    }
+    if (kind === 1 && ni < numeric.length) {
+      const t = numeric[ni++]
+      const correct = t.acronym
+      const others = shuffle(
+        trials.filter((x) => x.id !== t.id && x.domain === t.domain),
+        rnd
+      ).slice(0, 3)
+      const options = shuffle([correct, ...others.map((o) => o.acronym)], rnd)
+      questions.push({
+        id: `intervention-${t.id}`,
+        kind: 'population',
+        prompt: `Which trial evaluated: "${t.intervention}" in ${t.population.slice(0, 150)}${
+          t.population.length > 150 ? '…' : ''
+        }`,
+        context: null,
+        options,
+        answer: options.indexOf(correct),
+        explanation: `${t.acronym} (${t.year}, ${t.journal}). Intervention: ${t.intervention} vs ${t.comparators.join(
+          ', '
+        )}. n=${formatNumber(t.n)}.`,
+        trial_id: t.id,
+      })
+      continue
+    }
+    const t = all[(questions.length * 3) % all.length]
+    if (kind === 2) {
+      const correct = DOMAIN_LABELS[t.domain]
+      const opts = new Set<string>([correct])
+      for (const d of DOMAIN_ORDER) if (opts.size < 4) opts.add(DOMAIN_LABELS[d])
+      const options = shuffle([...opts], rnd)
+      questions.push({
+        id: `domain-${t.id}`,
+        kind: 'domain',
+        prompt: `Which evidence domain does ${t.acronym} belong to?`,
+        context: t.title,
+        options,
+        answer: options.indexOf(correct),
+        explanation: `${t.acronym} is classified under "${correct}" because it studied ${t.intervention} in ${t.population.slice(
+          0,
+          120
+        )}…`,
+        trial_id: t.id,
+      })
+    } else {
+      const correct = String(t.year)
+      const opts = new Set<string>([correct])
+      while (opts.size < 4) opts.add(String((t.year ?? 2000) + Math.floor(rnd() * 13) - 6))
+      const options = shuffle([...opts], rnd)
+      questions.push({
+        id: `year-${t.id}`,
+        kind: 'year',
+        prompt: `In which year was ${t.acronym} published?`,
+        context: t.title,
+        options,
+        answer: options.indexOf(correct),
+        explanation: `${t.acronym} was published in ${t.year} in ${t.journal}.`,
+        trial_id: t.id,
+      })
+    }
+  }
+  return questions.slice(0, count)
+}
+
+/** Structured comparison rows for the side-by-side view. */
+export interface ComparisonField {
+  label: string
+  values: (string | null)[]
+  numeric?: (number | null)[]
+}

@@ -1,0 +1,2297 @@
+{
+  "summary": {
+    "totalN": 88,
+    "okN": 84,
+    "totalV": 81,
+    "okV": 81,
+    "flagged": 73
+  },
+  "flagged": [
+    {
+      "id": "v-heft",
+      "acronym": "V-HeFT",
+      "source_file": "VHEFT_1986.pdf",
+      "checks": {
+        "n": "ok:\"642\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "v-heft-ii",
+      "acronym": "V-HeFT II",
+      "source_file": "VHeFT II_1991.pdf",
+      "checks": {
+        "n": "ok:\"804\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "save",
+      "acronym": "SAVE",
+      "source_file": "SAVE trial_NEJM_1992.pdf",
+      "checks": {
+        "n": "ok:\"2231\"",
+        "value": "ok:\"19\"",
+        "ci_low": "ok:\"3\"",
+        "ci_high": "ok:\"32\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "aire",
+      "acronym": "AIRE",
+      "source_file": "AIRE_1993.pdf",
+      "checks": {
+        "n": "ok:\"1986\"",
+        "value": "ok:\"27\"",
+        "ci_low": "ok:\"11\"",
+        "ci_high": "ok:\"40\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "woscops",
+      "acronym": "WOSCOPS",
+      "source_file": "WOSCOPS trial_1995.pdf",
+      "checks": {
+        "n": "ok:\"6595\"",
+        "value": "ok:\"31\"",
+        "ci_low": "ok:\"17\"",
+        "ci_high": "ok:\"43\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dig",
+      "acronym": "DIG",
+      "source_file": "DIG_1997_NEJM.pdf",
+      "checks": {
+        "n": "ok:\"6800\"",
+        "value": "ok:\"0.99\"",
+        "ci_low": "ok:\"0.91\"",
+        "ci_high": "ok:\"1.07\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "elite",
+      "acronym": "ELITE",
+      "source_file": "Elite_1997.pdf",
+      "checks": {
+        "n": "ok:\"722\"",
+        "value": "ok:\"2\"",
+        "ci_low": "ok:\"-51\"",
+        "ci_high": "ok:\"36\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "afcaps-texcaps",
+      "acronym": "AFCAPS/TexCAPS",
+      "source_file": "AFCAPS trial_1998.pdf",
+      "checks": {
+        "n": "ok:\"6605\"",
+        "value": "ok:\"0.63\"",
+        "ci_low": "ok:\"0.5\"",
+        "ci_high": "ok:\"0.79\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "cibis-ii",
+      "acronym": "CIBIS-II",
+      "source_file": "CIBIS-II.pdf",
+      "checks": {
+        "n": "ok:\"2647\"",
+        "value": "ok:\"0.66\"",
+        "ci_low": "ok:\"0.54\"",
+        "ci_high": "ok:\"0.81\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "merit-hf",
+      "acronym": "MERIT-HF",
+      "source_file": "MERIT.pdf",
+      "checks": {
+        "n": "ok:\"3991\"",
+        "value": "ok:\"0.66\"",
+        "ci_low": "ok:\"0.53\"",
+        "ci_high": "ok:\"0.81\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "rales",
+      "acronym": "RALES",
+      "source_file": "RALES trial_NEJM_1999.pdf",
+      "checks": {
+        "n": "ok:\"1663\"",
+        "value": "ok:\"0.7\"",
+        "ci_low": "ok:\"0.6\"",
+        "ci_high": "ok:\"0.82\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "hope",
+      "acronym": "HOPE",
+      "source_file": "HOPE trial_2000.pdf",
+      "checks": {
+        "n": "ok:\"9297\"",
+        "value": "ok:\"0.78\"",
+        "ci_low": "ok:\"0.7\"",
+        "ci_high": "ok:\"0.86\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "cure",
+      "acronym": "CURE",
+      "source_file": "CURE trial.pdf",
+      "checks": {
+        "n": "ok:\"12562\"",
+        "value": "ok:\"0.8\"",
+        "ci_low": "ok:\"0.72\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "val-heft",
+      "acronym": "Val-HeFT",
+      "source_file": "ValHeFT_2001.pdf",
+      "checks": {
+        "n": "ok:\"5010\"",
+        "value": "ok:\"0.87\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"0.97\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "affirm",
+      "acronym": "AFFIRM",
+      "source_file": "AFFIRM_2002.pdf",
+      "checks": {
+        "n": "ok:\"4060\"",
+        "value": "ok:\"1.15\"",
+        "ci_low": "ok:\"0.99\"",
+        "ci_high": "ok:\"1.34\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "copernicus",
+      "acronym": "COPERNICUS",
+      "source_file": "COPERNICUS.pdf",
+      "checks": {
+        "n": "ok:\"2289\"",
+        "value": "ok:\"35\"",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ascot-lla",
+      "acronym": "ASCOT-LLA",
+      "source_file": "ASCOT trial.pdf",
+      "checks": {
+        "n": "ok:\"10305\"",
+        "value": "ok:\"0.64\"",
+        "ci_low": "ok:\"0.5\"",
+        "ci_high": "ok:\"0.83\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charm-added",
+      "acronym": "CHARM-Added",
+      "source_file": "CHARM added_2003.pdf",
+      "checks": {
+        "n": "ok:\"2548\"",
+        "value": "ok:\"0.85\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charm-alternative",
+      "acronym": "CHARM-Alternative",
+      "source_file": "CHARM alternate_2003.pdf",
+      "checks": {
+        "n": "ok:\"2028\"",
+        "value": "ok:\"0.77\"",
+        "ci_low": "ok:\"0.67\"",
+        "ci_high": "ok:\"0.89\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charm-overall",
+      "acronym": "CHARM-Overall",
+      "source_file": "CHARM overall_2003.pdf",
+      "checks": {
+        "n": "ok:\"7599\"",
+        "value": "ok:\"0.91\"",
+        "ci_low": "ok:\"0.83\"",
+        "ci_high": "ok:\"1\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "comet",
+      "acronym": "COMET",
+      "source_file": "COMET.pdf",
+      "checks": {
+        "n": "ok:\"3029\"",
+        "value": "ok:\"0.83\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.93\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ephesus",
+      "acronym": "EPHESUS",
+      "source_file": "EPHESUS_NEJM_2003.pdf",
+      "checks": {
+        "n": "ok:\"6642\"",
+        "value": "ok:\"0.85\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "europa",
+      "acronym": "EUROPA",
+      "source_file": "EUROPA trial_2003.pdf",
+      "checks": {
+        "n": "ok:\"12218\"",
+        "value": "ok:\"20\"",
+        "ci_low": "ok:\"9\"",
+        "ci_high": "ok:\"29\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "valiant",
+      "acronym": "VALIANT",
+      "source_file": "VALIANT trial_2003.pdf",
+      "checks": {
+        "n": "ok:\"14703\"",
+        "value": "ok:\"1\"",
+        "ci_low": "ok:\"0.9\"",
+        "ci_high": "ok:\"1.11\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "a-heft",
+      "acronym": "A-HeFT",
+      "source_file": "AHEFT_2004.pdf",
+      "checks": {
+        "n": "ok:\"1050\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "cards",
+      "acronym": "CARDS",
+      "source_file": "CARDS trial_2004.pdf",
+      "checks": {
+        "n": "ok:\"2838\"",
+        "value": "ok:\"37\"",
+        "ci_low": "ok:\"-52\"",
+        "ci_high": "ok:\"-17\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "peace",
+      "acronym": "PEACE",
+      "source_file": "PEACE_2004.pdf",
+      "checks": {
+        "n": "ok:\"8290\"",
+        "value": "ok:\"0.96\"",
+        "ci_low": "ok:\"0.88\"",
+        "ci_high": "ok:\"1.06\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "prove-it-timi-22",
+      "acronym": "PROVE IT–TIMI 22",
+      "source_file": "PROVE IT trial_2004.pdf",
+      "checks": {
+        "n": "ok:\"4162\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "commit",
+      "acronym": "COMMIT",
+      "source_file": "COMMIT-BB trial_Lancet_2005.pdf",
+      "checks": {
+        "n": "ok:\"45852\"",
+        "value": "ok:\"0.96\"",
+        "ci_low": "ok:\"0.9\"",
+        "ci_high": "ok:\"1.01\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charisma",
+      "acronym": "CHARISMA",
+      "source_file": "CHARISMA_2006.pdf",
+      "checks": {
+        "n": "ok:\"15603\"",
+        "value": "ok:\"0.93\"",
+        "ci_low": "ok:\"0.83\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "mega-study",
+      "acronym": "MEGA Study",
+      "source_file": "MEGA_2006.pdf",
+      "checks": {
+        "n": "ok:\"7832\"",
+        "value": "ok:\"0.67\"",
+        "ci_low": "ok:\"0.49\"",
+        "ci_high": "ok:\"0.91\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "euridis-adonis",
+      "acronym": "EURIDIS/ADONIS",
+      "source_file": "ADONIS trial_2007.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.75\"",
+        "ci_low": "ok:\"0.65\"",
+        "ci_high": "ok:\"0.87\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "triton-timi-38-2007",
+      "acronym": "TRITON–TIMI 38",
+      "source_file": "TRITON.pdf",
+      "checks": {
+        "n": "ok:\"13608\"",
+        "value": "ok:\"0.81\"",
+        "ci_low": "ok:\"0.73\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "gissi-hf",
+      "acronym": "GISSI-HF",
+      "source_file": "GISSI-HF_2008.pdf",
+      "checks": {
+        "n": "ok:\"6975\"",
+        "value": "ok:\"0.91\"",
+        "ci_low": "ok:\"0.833\"",
+        "ci_high": "ok:\"0.998\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "jupiter",
+      "acronym": "JUPITER",
+      "source_file": "JUPITER trial_2008.pdf",
+      "checks": {
+        "n": "ok:\"17802\"",
+        "value": "ok:\"0.56\"",
+        "ci_low": "ok:\"0.46\"",
+        "ci_high": "ok:\"0.69\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ontarget",
+      "acronym": "ONTARGET",
+      "source_file": "ONTARGET trial_NEJM_2008_ACE plus ARB.pdf",
+      "checks": {
+        "n": "ok:\"25620\"",
+        "value": "ok:\"1.01\"",
+        "ci_low": "ok:\"0.94\"",
+        "ci_high": "ok:\"1.09\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise",
+      "acronym": "APPRAISE",
+      "source_file": "APPRAISE I (2).pdf",
+      "checks": {
+        "n": "ok:\"1715\"",
+        "value": "ok:\"2.45\"",
+        "ci_low": "ok:\"1.31\"",
+        "ci_high": "ok:\"4.61\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise-2009",
+      "acronym": "APPRAISE",
+      "source_file": "APPRAISE I.pdf",
+      "checks": {
+        "n": "ok:\"1715\"",
+        "value": "ok:\"1.78\"",
+        "ci_low": "ok:\"0.91\"",
+        "ci_high": "ok:\"3.48\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "athena",
+      "acronym": "ATHENA",
+      "source_file": "ATHENA_2009.pdf",
+      "checks": {
+        "n": "ok:\"4628\"",
+        "value": "ok:\"0.76\"",
+        "ci_low": "ok:\"0.69\"",
+        "ci_high": "ok:\"0.84\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas-acs-timi-46",
+      "acronym": "ATLAS ACS-TIMI 46",
+      "source_file": "ATLAS TIMI 46 (2).pdf",
+      "checks": {
+        "n": "ok:\"3491\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.6\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas-acs-timi-46-2009",
+      "acronym": "ATLAS ACS-TIMI 46",
+      "source_file": "ATLAS TIMI 46.pdf",
+      "checks": {
+        "n": "ok:\"3491\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.6\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "heaal",
+      "acronym": "HEAAL",
+      "source_file": "HEAAL_2009.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.9\"",
+        "ci_low": "ok:\"0.82\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "plato",
+      "acronym": "PLATO",
+      "source_file": "PLATO2009.pdf",
+      "checks": {
+        "n": "ok:\"18624\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"0.92\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "re-ly",
+      "acronym": "RE-LY",
+      "source_file": "RELY Trial.pdf",
+      "checks": {
+        "n": "ok:\"18113\"",
+        "value": "ok:\"0.66\"",
+        "ci_low": "ok:\"0.53\"",
+        "ci_high": "ok:\"0.82\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "current-oasis-7",
+      "acronym": "CURRENT-OASIS 7",
+      "source_file": "CURRENT OASIS-PCI_2010.pdf",
+      "checks": {
+        "n": "ok:\"17263\"",
+        "value": "ok:\"0.86\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "race-ii",
+      "acronym": "RACE II",
+      "source_file": "RACE II_2010.pdf",
+      "checks": {
+        "n": "ok:\"614\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "shift-2010",
+      "acronym": "SHIFT",
+      "source_file": "SHIFT_the Lancet.pdf",
+      "checks": {
+        "n": "ok:\"6558\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "triton-timi-38",
+      "acronym": "TRITON-TIMI 38",
+      "source_file": "TRITON NSTEMI substudy.pdf",
+      "checks": {
+        "n": "n/a",
+        "value": "ok:\"0.57\"",
+        "ci_low": "ok:\"0.39\"",
+        "ci_high": "ok:\"0.83\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise-2",
+      "acronym": "APPRAISE-2",
+      "source_file": "APPRAISE II (2).pdf",
+      "checks": {
+        "n": "ok:\"7392\"",
+        "value": "ok:\"0.95\"",
+        "ci_low": "ok:\"0.8\"",
+        "ci_high": "ok:\"1.11\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise-2-2011",
+      "acronym": "APPRAISE-2",
+      "source_file": "APPRAISE II.pdf",
+      "checks": {
+        "n": "ok:\"7392\"",
+        "value": "ok:\"0.95\"",
+        "ci_low": "ok:\"0.8\"",
+        "ci_high": "ok:\"1.11\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "aristotle",
+      "acronym": "ARISTOTLE",
+      "source_file": "ARISTOTLE.pdf",
+      "checks": {
+        "n": "ok:\"18201\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.95\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dose",
+      "acronym": "DOSE",
+      "source_file": "DOSE trial_NEJM_2011.pdf",
+      "checks": {
+        "n": "ok:\"308\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "emphasis-hf",
+      "acronym": "EMPHASIS-HF",
+      "source_file": "EMPHASIS_NEJM_2011.pdf",
+      "checks": {
+        "n": "ok:\"2737\"",
+        "value": "ok:\"0.63\"",
+        "ci_low": "ok:\"0.54\"",
+        "ci_high": "ok:\"0.74\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "re-deem",
+      "acronym": "RE-DEEM",
+      "source_file": "REDEEM trial (2).pdf",
+      "checks": {
+        "n": "ok:\"1861\"",
+        "value": "ok:\"4.27\"",
+        "ci_low": "ok:\"1.86\"",
+        "ci_high": "ok:\"9.81\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "re-deem-2011",
+      "acronym": "RE-DEEM",
+      "source_file": "REDEEM trial.pdf",
+      "checks": {
+        "n": "ok:\"1861\"",
+        "value": "ok:\"4.27\"",
+        "ci_low": "ok:\"1.86\"",
+        "ci_high": "ok:\"9.81\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "rocket-af",
+      "acronym": "ROCKET AF",
+      "source_file": "ROCKET trial.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "rocket-af-2011",
+      "acronym": "ROCKET AF",
+      "source_file": "ROCKET-AF.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "shift",
+      "acronym": "SHIFT",
+      "source_file": "Ivabradine_SHIFT and BEAUTIFUL.pdf",
+      "checks": {
+        "n": "ok:\"6505\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas-acs-2-timi-51-2012",
+      "acronym": "ATLAS ACS 2–TIMI 51",
+      "source_file": "ATLAS TMI 51.pdf",
+      "checks": {
+        "n": "ok:\"15526\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "trilogy-acs",
+      "acronym": "TRILOGY ACS",
+      "source_file": "Trilogy trial.pdf",
+      "checks": {
+        "n": "ok:\"7243\"",
+        "value": "ok:\"0.91\"",
+        "ci_low": "ok:\"0.79\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "engage-af-timi-48",
+      "acronym": "ENGAGE AF-TIMI 48",
+      "source_file": "ENGAGE.pdf",
+      "checks": {
+        "n": "ok:\"21105\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.63\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dapt",
+      "acronym": "DAPT",
+      "source_file": "DAPT_2014.pdf",
+      "checks": {
+        "n": "ok:\"9961\"",
+        "value": "ok:\"0.71\"",
+        "ci_low": "ok:\"0.59\"",
+        "ci_high": "ok:\"0.85\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "paradigm-hf",
+      "acronym": "PARADIGM-HF",
+      "source_file": "PARADIGM-HF.pdf",
+      "checks": {
+        "n": "ok:\"8442\"",
+        "value": "ok:\"0.8\"",
+        "ci_low": "ok:\"0.73\"",
+        "ci_high": "ok:\"0.87\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "topcat",
+      "acronym": "TOPCAT",
+      "source_file": "TOPCAT_NEJM_2014.pdf",
+      "checks": {
+        "n": "ok:\"3445\"",
+        "value": "ok:\"0.89\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"1.04\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "improve-it",
+      "acronym": "IMPROVE-IT",
+      "source_file": "IMPROVE-IT trial_2015.pdf",
+      "checks": {
+        "n": "ok:\"18144\"",
+        "value": "ok:\"0.936\"",
+        "ci_low": "ok:\"0.89\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "pegasus-timi-54",
+      "acronym": "PEGASUS-TIMI 54",
+      "source_file": "PEGASUS_NEJM_2015.pdf",
+      "checks": {
+        "n": "ok:\"21162\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.95\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "afire",
+      "acronym": "AFIRE",
+      "source_file": "AFIRE trial_2019_AC in stable CAD.pdf",
+      "checks": {
+        "n": "ok:\"2215\"",
+        "value": "ok:\"0.72\"",
+        "ci_low": "ok:\"0.55\"",
+        "ci_high": "ok:\"0.95\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dapa-hf",
+      "acronym": "DAPA-HF",
+      "source_file": "DAPA-HF_NEJM_2019.pdf",
+      "checks": {
+        "n": "ok:\"4744\"",
+        "value": "ok:\"0.74\"",
+        "ci_low": "ok:\"0.65\"",
+        "ci_high": "ok:\"0.85\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "east-afnet-4",
+      "acronym": "EAST-AFNET 4",
+      "source_file": "EAST AFNET-4_rate vs. rhythm control_NEJM_2020.pdf",
+      "checks": {
+        "n": "ok:\"2789\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.94\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "emperor-reduced",
+      "acronym": "EMPEROR-Reduced",
+      "source_file": "EMPEROR-reduced_NEJM_2020.pdf",
+      "checks": {
+        "n": "ok:\"3730\"",
+        "value": "ok:\"0.75\"",
+        "ci_low": "ok:\"0.65\"",
+        "ci_high": "ok:\"0.86\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "emperor-preserved",
+      "acronym": "EMPEROR-Preserved",
+      "source_file": "Empa_HFpEF_EMPEROR-Preserved_NEJM_2021.pdf",
+      "checks": {
+        "n": "ok:\"5988\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.69\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "deliver",
+      "acronym": "DELIVER",
+      "source_file": "Dapa_HfpEF_DELIVER_NEJM.pdf",
+      "checks": {
+        "n": "ok:\"6263\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.73\"",
+        "ci_high": "ok:\"0.92\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dapa-mi",
+      "acronym": "DAPA-MI",
+      "source_file": "DAPA-MI trial_NEJM_Full Text.pdf",
+      "checks": {
+        "n": "ok:\"4017\"",
+        "value": "ok:\"1.34\"",
+        "ci_low": "ok:\"1.2\"",
+        "ci_high": "ok:\"1.5\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    }
+  ],
+  "report": [
+    {
+      "id": "v-heft",
+      "acronym": "V-HeFT",
+      "source_file": "VHEFT_1986.pdf",
+      "checks": {
+        "n": "ok:\"642\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "v-heft-ii",
+      "acronym": "V-HeFT II",
+      "source_file": "VHeFT II_1991.pdf",
+      "checks": {
+        "n": "ok:\"804\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "save",
+      "acronym": "SAVE",
+      "source_file": "SAVE trial_NEJM_1992.pdf",
+      "checks": {
+        "n": "ok:\"2231\"",
+        "value": "ok:\"19\"",
+        "ci_low": "ok:\"3\"",
+        "ci_high": "ok:\"32\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "aire",
+      "acronym": "AIRE",
+      "source_file": "AIRE_1993.pdf",
+      "checks": {
+        "n": "ok:\"1986\"",
+        "value": "ok:\"27\"",
+        "ci_low": "ok:\"11\"",
+        "ci_high": "ok:\"40\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "woscops",
+      "acronym": "WOSCOPS",
+      "source_file": "WOSCOPS trial_1995.pdf",
+      "checks": {
+        "n": "ok:\"6595\"",
+        "value": "ok:\"31\"",
+        "ci_low": "ok:\"17\"",
+        "ci_high": "ok:\"43\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dig",
+      "acronym": "DIG",
+      "source_file": "DIG_1997_NEJM.pdf",
+      "checks": {
+        "n": "ok:\"6800\"",
+        "value": "ok:\"0.99\"",
+        "ci_low": "ok:\"0.91\"",
+        "ci_high": "ok:\"1.07\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "elite",
+      "acronym": "ELITE",
+      "source_file": "Elite_1997.pdf",
+      "checks": {
+        "n": "ok:\"722\"",
+        "value": "ok:\"2\"",
+        "ci_low": "ok:\"-51\"",
+        "ci_high": "ok:\"36\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "afcaps-texcaps",
+      "acronym": "AFCAPS/TexCAPS",
+      "source_file": "AFCAPS trial_1998.pdf",
+      "checks": {
+        "n": "ok:\"6605\"",
+        "value": "ok:\"0.63\"",
+        "ci_low": "ok:\"0.5\"",
+        "ci_high": "ok:\"0.79\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas",
+      "acronym": "ATLAS",
+      "source_file": "ATLAS trial.pdf",
+      "checks": {
+        "n": "ok:\"3164\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "cibis-ii",
+      "acronym": "CIBIS-II",
+      "source_file": "CIBIS-II.pdf",
+      "checks": {
+        "n": "ok:\"2647\"",
+        "value": "ok:\"0.66\"",
+        "ci_low": "ok:\"0.54\"",
+        "ci_high": "ok:\"0.81\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "merit-hf",
+      "acronym": "MERIT-HF",
+      "source_file": "MERIT.pdf",
+      "checks": {
+        "n": "ok:\"3991\"",
+        "value": "ok:\"0.66\"",
+        "ci_low": "ok:\"0.53\"",
+        "ci_high": "ok:\"0.81\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "rales",
+      "acronym": "RALES",
+      "source_file": "RALES trial_NEJM_1999.pdf",
+      "checks": {
+        "n": "ok:\"1663\"",
+        "value": "ok:\"0.7\"",
+        "ci_low": "ok:\"0.6\"",
+        "ci_high": "ok:\"0.82\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "hope",
+      "acronym": "HOPE",
+      "source_file": "HOPE trial_2000.pdf",
+      "checks": {
+        "n": "ok:\"9297\"",
+        "value": "ok:\"0.78\"",
+        "ci_low": "ok:\"0.7\"",
+        "ci_high": "ok:\"0.86\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "cure",
+      "acronym": "CURE",
+      "source_file": "CURE trial.pdf",
+      "checks": {
+        "n": "ok:\"12562\"",
+        "value": "ok:\"0.8\"",
+        "ci_low": "ok:\"0.72\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "miracl",
+      "acronym": "MIRACL",
+      "source_file": "MIRACL_JAMA_2001.pdf",
+      "checks": {
+        "n": "ok:\"3086\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.7\"",
+        "ci_high": "ok:\"1\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "val-heft",
+      "acronym": "Val-HeFT",
+      "source_file": "ValHeFT_2001.pdf",
+      "checks": {
+        "n": "ok:\"5010\"",
+        "value": "ok:\"0.87\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"0.97\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "affirm",
+      "acronym": "AFFIRM",
+      "source_file": "AFFIRM_2002.pdf",
+      "checks": {
+        "n": "ok:\"4060\"",
+        "value": "ok:\"1.15\"",
+        "ci_low": "ok:\"0.99\"",
+        "ci_high": "ok:\"1.34\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "copernicus",
+      "acronym": "COPERNICUS",
+      "source_file": "COPERNICUS.pdf",
+      "checks": {
+        "n": "ok:\"2289\"",
+        "value": "ok:\"35\"",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ascot-lla",
+      "acronym": "ASCOT-LLA",
+      "source_file": "ASCOT trial.pdf",
+      "checks": {
+        "n": "ok:\"10305\"",
+        "value": "ok:\"0.64\"",
+        "ci_low": "ok:\"0.5\"",
+        "ci_high": "ok:\"0.83\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charm-added",
+      "acronym": "CHARM-Added",
+      "source_file": "CHARM added_2003.pdf",
+      "checks": {
+        "n": "ok:\"2548\"",
+        "value": "ok:\"0.85\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charm-alternative",
+      "acronym": "CHARM-Alternative",
+      "source_file": "CHARM alternate_2003.pdf",
+      "checks": {
+        "n": "ok:\"2028\"",
+        "value": "ok:\"0.77\"",
+        "ci_low": "ok:\"0.67\"",
+        "ci_high": "ok:\"0.89\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "charm-overall",
+      "acronym": "CHARM-Overall",
+      "source_file": "CHARM overall_2003.pdf",
+      "checks": {
+        "n": "ok:\"7599\"",
+        "value": "ok:\"0.91\"",
+        "ci_low": "ok:\"0.83\"",
+        "ci_high": "ok:\"1\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "comet",
+      "acronym": "COMET",
+      "source_file": "COMET.pdf",
+      "checks": {
+        "n": "ok:\"3029\"",
+        "value": "ok:\"0.83\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.93\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ephesus",
+      "acronym": "EPHESUS",
+      "source_file": "EPHESUS_NEJM_2003.pdf",
+      "checks": {
+        "n": "ok:\"6642\"",
+        "value": "ok:\"0.85\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "europa",
+      "acronym": "EUROPA",
+      "source_file": "EUROPA trial_2003.pdf",
+      "checks": {
+        "n": "ok:\"12218\"",
+        "value": "ok:\"20\"",
+        "ci_low": "ok:\"9\"",
+        "ci_high": "ok:\"29\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "valiant",
+      "acronym": "VALIANT",
+      "source_file": "VALIANT trial_2003.pdf",
+      "checks": {
+        "n": "ok:\"14703\"",
+        "value": "ok:\"1\"",
+        "ci_low": "ok:\"0.9\"",
+        "ci_high": "ok:\"1.11\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "a-heft",
+      "acronym": "A-HeFT",
+      "source_file": "AHEFT_2004.pdf",
+      "checks": {
+        "n": "ok:\"1050\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "cards",
+      "acronym": "CARDS",
+      "source_file": "CARDS trial_2004.pdf",
+      "checks": {
+        "n": "ok:\"2838\"",
+        "value": "ok:\"37\"",
+        "ci_low": "ok:\"-52\"",
+        "ci_high": "ok:\"-17\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "peace",
+      "acronym": "PEACE",
+      "source_file": "PEACE_2004.pdf",
+      "checks": {
+        "n": "ok:\"8290\"",
+        "value": "ok:\"0.96\"",
+        "ci_low": "ok:\"0.88\"",
+        "ci_high": "ok:\"1.06\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "prove-it-timi-22",
+      "acronym": "PROVE IT–TIMI 22",
+      "source_file": "PROVE IT trial_2004.pdf",
+      "checks": {
+        "n": "ok:\"4162\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "stellar",
+      "acronym": "STELLAR",
+      "source_file": "STELLAR trial.pdf",
+      "checks": {
+        "n": "ok:\"2268\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "commit",
+      "acronym": "COMMIT",
+      "source_file": "COMMIT-BB trial_Lancet_2005.pdf",
+      "checks": {
+        "n": "ok:\"45852\"",
+        "value": "ok:\"0.96\"",
+        "ci_low": "ok:\"0.9\"",
+        "ci_high": "ok:\"1.01\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ideal",
+      "acronym": "IDEAL",
+      "source_file": "IDEAL trial.pdf",
+      "checks": {
+        "n": "ok:\"8888\"",
+        "value": "ok:\"0.89\"",
+        "ci_low": "ok:\"0.78\"",
+        "ci_high": "ok:\"1.01\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "charisma",
+      "acronym": "CHARISMA",
+      "source_file": "CHARISMA_2006.pdf",
+      "checks": {
+        "n": "ok:\"15603\"",
+        "value": "ok:\"0.93\"",
+        "ci_low": "ok:\"0.83\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "mega-study",
+      "acronym": "MEGA Study",
+      "source_file": "MEGA_2006.pdf",
+      "checks": {
+        "n": "ok:\"7832\"",
+        "value": "ok:\"0.67\"",
+        "ci_low": "ok:\"0.49\"",
+        "ci_high": "ok:\"0.91\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "corona",
+      "acronym": "CORONA",
+      "source_file": "CORONA trial_Rosuvastatin.pdf",
+      "checks": {
+        "n": "ok:\"5011\"",
+        "value": "ok:\"0.92\"",
+        "ci_low": "ok:\"0.83\"",
+        "ci_high": "ok:\"1.02\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "euridis-adonis",
+      "acronym": "EURIDIS/ADONIS",
+      "source_file": "ADONIS trial_2007.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.75\"",
+        "ci_low": "ok:\"0.65\"",
+        "ci_high": "ok:\"0.87\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "triton-timi-38-2007",
+      "acronym": "TRITON–TIMI 38",
+      "source_file": "TRITON.pdf",
+      "checks": {
+        "n": "ok:\"13608\"",
+        "value": "ok:\"0.81\"",
+        "ci_low": "ok:\"0.73\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "andromeda",
+      "acronym": "ANDROMEDA",
+      "source_file": "ANDROMEDA trial_2008.pdf",
+      "checks": {
+        "n": "ok:\"627\"",
+        "value": "ok:\"1.38\"",
+        "ci_low": "ok:\"0.92\"",
+        "ci_high": "ok:\"2.09\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "gissi-hf",
+      "acronym": "GISSI-HF",
+      "source_file": "GISSI-HF_2008.pdf",
+      "checks": {
+        "n": "ok:\"6975\"",
+        "value": "ok:\"0.91\"",
+        "ci_low": "ok:\"0.833\"",
+        "ci_high": "ok:\"0.998\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "jupiter",
+      "acronym": "JUPITER",
+      "source_file": "JUPITER trial_2008.pdf",
+      "checks": {
+        "n": "ok:\"17802\"",
+        "value": "ok:\"0.56\"",
+        "ci_low": "ok:\"0.46\"",
+        "ci_high": "ok:\"0.69\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ontarget",
+      "acronym": "ONTARGET",
+      "source_file": "ONTARGET trial_NEJM_2008_ACE plus ARB.pdf",
+      "checks": {
+        "n": "ok:\"25620\"",
+        "value": "ok:\"1.01\"",
+        "ci_low": "ok:\"0.94\"",
+        "ci_high": "ok:\"1.09\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise",
+      "acronym": "APPRAISE",
+      "source_file": "APPRAISE I (2).pdf",
+      "checks": {
+        "n": "ok:\"1715\"",
+        "value": "ok:\"2.45\"",
+        "ci_low": "ok:\"1.31\"",
+        "ci_high": "ok:\"4.61\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise-2009",
+      "acronym": "APPRAISE",
+      "source_file": "APPRAISE I.pdf",
+      "checks": {
+        "n": "ok:\"1715\"",
+        "value": "ok:\"1.78\"",
+        "ci_low": "ok:\"0.91\"",
+        "ci_high": "ok:\"3.48\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "athena",
+      "acronym": "ATHENA",
+      "source_file": "ATHENA_2009.pdf",
+      "checks": {
+        "n": "ok:\"4628\"",
+        "value": "ok:\"0.76\"",
+        "ci_low": "ok:\"0.69\"",
+        "ci_high": "ok:\"0.84\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas-acs-timi-46",
+      "acronym": "ATLAS ACS-TIMI 46",
+      "source_file": "ATLAS TIMI 46 (2).pdf",
+      "checks": {
+        "n": "ok:\"3491\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.6\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas-acs-timi-46-2009",
+      "acronym": "ATLAS ACS-TIMI 46",
+      "source_file": "ATLAS TIMI 46.pdf",
+      "checks": {
+        "n": "ok:\"3491\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.6\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "heaal",
+      "acronym": "HEAAL",
+      "source_file": "HEAAL_2009.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.9\"",
+        "ci_low": "ok:\"0.82\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "plato",
+      "acronym": "PLATO",
+      "source_file": "PLATO2009.pdf",
+      "checks": {
+        "n": "ok:\"18624\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"0.92\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "re-ly",
+      "acronym": "RE-LY",
+      "source_file": "RELY Trial.pdf",
+      "checks": {
+        "n": "ok:\"18113\"",
+        "value": "ok:\"0.66\"",
+        "ci_low": "ok:\"0.53\"",
+        "ci_high": "ok:\"0.82\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "current-oasis-7",
+      "acronym": "CURRENT-OASIS 7",
+      "source_file": "CURRENT OASIS-PCI_2010.pdf",
+      "checks": {
+        "n": "ok:\"17263\"",
+        "value": "ok:\"0.86\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "plato-2010",
+      "acronym": "PLATO",
+      "source_file": "PLATO2010.pdf",
+      "checks": {
+        "n": "ok:\"13408\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.94\""
+      },
+      "quotes_ok": "2/2",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "race-ii",
+      "acronym": "RACE II",
+      "source_file": "RACE II_2010.pdf",
+      "checks": {
+        "n": "ok:\"614\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "shift-2010",
+      "acronym": "SHIFT",
+      "source_file": "SHIFT_the Lancet.pdf",
+      "checks": {
+        "n": "ok:\"6558\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "triton-timi-38",
+      "acronym": "TRITON-TIMI 38",
+      "source_file": "TRITON NSTEMI substudy.pdf",
+      "checks": {
+        "n": "n/a",
+        "value": "ok:\"0.57\"",
+        "ci_low": "ok:\"0.39\"",
+        "ci_high": "ok:\"0.83\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise-2",
+      "acronym": "APPRAISE-2",
+      "source_file": "APPRAISE II (2).pdf",
+      "checks": {
+        "n": "ok:\"7392\"",
+        "value": "ok:\"0.95\"",
+        "ci_low": "ok:\"0.8\"",
+        "ci_high": "ok:\"1.11\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "appraise-2-2011",
+      "acronym": "APPRAISE-2",
+      "source_file": "APPRAISE II.pdf",
+      "checks": {
+        "n": "ok:\"7392\"",
+        "value": "ok:\"0.95\"",
+        "ci_low": "ok:\"0.8\"",
+        "ci_high": "ok:\"1.11\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "aristotle",
+      "acronym": "ARISTOTLE",
+      "source_file": "ARISTOTLE.pdf",
+      "checks": {
+        "n": "ok:\"18201\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.95\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dose",
+      "acronym": "DOSE",
+      "source_file": "DOSE trial_NEJM_2011.pdf",
+      "checks": {
+        "n": "ok:\"308\"",
+        "value": "n/a",
+        "ci_low": "n/a",
+        "ci_high": "n/a"
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "emphasis-hf",
+      "acronym": "EMPHASIS-HF",
+      "source_file": "EMPHASIS_NEJM_2011.pdf",
+      "checks": {
+        "n": "ok:\"2737\"",
+        "value": "ok:\"0.63\"",
+        "ci_low": "ok:\"0.54\"",
+        "ci_high": "ok:\"0.74\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "re-deem",
+      "acronym": "RE-DEEM",
+      "source_file": "REDEEM trial (2).pdf",
+      "checks": {
+        "n": "ok:\"1861\"",
+        "value": "ok:\"4.27\"",
+        "ci_low": "ok:\"1.86\"",
+        "ci_high": "ok:\"9.81\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "re-deem-2011",
+      "acronym": "RE-DEEM",
+      "source_file": "REDEEM trial.pdf",
+      "checks": {
+        "n": "ok:\"1861\"",
+        "value": "ok:\"4.27\"",
+        "ci_low": "ok:\"1.86\"",
+        "ci_high": "ok:\"9.81\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "rocket-af",
+      "acronym": "ROCKET AF",
+      "source_file": "ROCKET trial.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "rocket-af-2011",
+      "acronym": "ROCKET AF",
+      "source_file": "ROCKET-AF.pdf",
+      "checks": {
+        "n": "MISSING",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [
+        "n"
+      ],
+      "needs_retry": true
+    },
+    {
+      "id": "shift",
+      "acronym": "SHIFT",
+      "source_file": "Ivabradine_SHIFT and BEAUTIFUL.pdf",
+      "checks": {
+        "n": "ok:\"6505\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.75\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "atlas-acs-2-timi-51",
+      "acronym": "ATLAS ACS 2–TIMI 51",
+      "source_file": "ATLAS TMI 51 (2).pdf",
+      "checks": {
+        "n": "ok:\"15526\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "atlas-acs-2-timi-51-2012",
+      "acronym": "ATLAS ACS 2–TIMI 51",
+      "source_file": "ATLAS TMI 51.pdf",
+      "checks": {
+        "n": "ok:\"15526\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.96\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "ctt-collaborators",
+      "acronym": "CTT Collaborators",
+      "source_file": "CTT Meta-analysis_2012.pdf",
+      "checks": {
+        "n": "ok:\"174149\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"0.81\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "trilogy-acs",
+      "acronym": "TRILOGY ACS",
+      "source_file": "Trilogy trial.pdf",
+      "checks": {
+        "n": "ok:\"7243\"",
+        "value": "ok:\"0.91\"",
+        "ci_low": "ok:\"0.79\"",
+        "ci_high": "ok:\"1.05\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "engage-af-timi-48",
+      "acronym": "ENGAGE AF-TIMI 48",
+      "source_file": "ENGAGE.pdf",
+      "checks": {
+        "n": "ok:\"21105\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.63\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dapt",
+      "acronym": "DAPT",
+      "source_file": "DAPT_2014.pdf",
+      "checks": {
+        "n": "ok:\"9961\"",
+        "value": "ok:\"0.71\"",
+        "ci_low": "ok:\"0.59\"",
+        "ci_high": "ok:\"0.85\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "paradigm-hf",
+      "acronym": "PARADIGM-HF",
+      "source_file": "PARADIGM-HF.pdf",
+      "checks": {
+        "n": "ok:\"8442\"",
+        "value": "ok:\"0.8\"",
+        "ci_low": "ok:\"0.73\"",
+        "ci_high": "ok:\"0.87\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "topcat",
+      "acronym": "TOPCAT",
+      "source_file": "TOPCAT_NEJM_2014.pdf",
+      "checks": {
+        "n": "ok:\"3445\"",
+        "value": "ok:\"0.89\"",
+        "ci_low": "ok:\"0.77\"",
+        "ci_high": "ok:\"1.04\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "improve-it",
+      "acronym": "IMPROVE-IT",
+      "source_file": "IMPROVE-IT trial_2015.pdf",
+      "checks": {
+        "n": "ok:\"18144\"",
+        "value": "ok:\"0.936\"",
+        "ci_low": "ok:\"0.89\"",
+        "ci_high": "ok:\"0.99\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "pegasus-timi-54",
+      "acronym": "PEGASUS-TIMI 54",
+      "source_file": "PEGASUS_NEJM_2015.pdf",
+      "checks": {
+        "n": "ok:\"21162\"",
+        "value": "ok:\"0.84\"",
+        "ci_low": "ok:\"0.74\"",
+        "ci_high": "ok:\"0.95\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "pioneer-af-pci",
+      "acronym": "PIONEER AF-PCI",
+      "source_file": "PIONEER trial.pdf",
+      "checks": {
+        "n": "ok:\"2124\"",
+        "value": "ok:\"0.59\"",
+        "ci_low": "ok:\"0.47\"",
+        "ci_high": "ok:\"0.76\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "re-dual-pci",
+      "acronym": "RE-DUAL PCI",
+      "source_file": "REDUAL trial.pdf",
+      "checks": {
+        "n": "ok:\"2725\"",
+        "value": "ok:\"0.52\"",
+        "ci_low": "ok:\"0.42\"",
+        "ci_high": "ok:\"0.63\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "afire",
+      "acronym": "AFIRE",
+      "source_file": "AFIRE trial_2019_AC in stable CAD.pdf",
+      "checks": {
+        "n": "ok:\"2215\"",
+        "value": "ok:\"0.72\"",
+        "ci_low": "ok:\"0.55\"",
+        "ci_high": "ok:\"0.95\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "augustus",
+      "acronym": "AUGUSTUS",
+      "source_file": "AUGUSTUS trial_2019.pdf",
+      "checks": {
+        "n": "ok:\"4614\"",
+        "value": "ok:\"0.69\"",
+        "ci_low": "ok:\"0.58\"",
+        "ci_high": "ok:\"0.81\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "dapa-hf",
+      "acronym": "DAPA-HF",
+      "source_file": "DAPA-HF_NEJM_2019.pdf",
+      "checks": {
+        "n": "ok:\"4744\"",
+        "value": "ok:\"0.74\"",
+        "ci_low": "ok:\"0.65\"",
+        "ci_high": "ok:\"0.85\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "east-afnet-4",
+      "acronym": "EAST-AFNET 4",
+      "source_file": "EAST AFNET-4_rate vs. rhythm control_NEJM_2020.pdf",
+      "checks": {
+        "n": "ok:\"2789\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.66\"",
+        "ci_high": "ok:\"0.94\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "emperor-reduced",
+      "acronym": "EMPEROR-Reduced",
+      "source_file": "EMPEROR-reduced_NEJM_2020.pdf",
+      "checks": {
+        "n": "ok:\"3730\"",
+        "value": "ok:\"0.75\"",
+        "ci_low": "ok:\"0.65\"",
+        "ci_high": "ok:\"0.86\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "emperor-preserved",
+      "acronym": "EMPEROR-Preserved",
+      "source_file": "Empa_HFpEF_EMPEROR-Preserved_NEJM_2021.pdf",
+      "checks": {
+        "n": "ok:\"5988\"",
+        "value": "ok:\"0.79\"",
+        "ci_low": "ok:\"0.69\"",
+        "ci_high": "ok:\"0.9\""
+      },
+      "quotes_ok": "0/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "advor",
+      "acronym": "ADVOR",
+      "source_file": "ADVOR trial.pdf",
+      "checks": {
+        "n": "ok:\"519\"",
+        "value": "ok:\"1.46\"",
+        "ci_low": "ok:\"1.17\"",
+        "ci_high": "ok:\"1.82\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "deliver",
+      "acronym": "DELIVER",
+      "source_file": "Dapa_HfpEF_DELIVER_NEJM.pdf",
+      "checks": {
+        "n": "ok:\"6263\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.73\"",
+        "ci_high": "ok:\"0.92\""
+      },
+      "quotes_ok": "2/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "dapa-mi",
+      "acronym": "DAPA-MI",
+      "source_file": "DAPA-MI trial_NEJM_Full Text.pdf",
+      "checks": {
+        "n": "ok:\"4017\"",
+        "value": "ok:\"1.34\"",
+        "ci_low": "ok:\"1.2\"",
+        "ci_high": "ok:\"1.5\""
+      },
+      "quotes_ok": "1/3",
+      "unverified_fields": [],
+      "needs_retry": true
+    },
+    {
+      "id": "empact-mi",
+      "acronym": "EMPACT-MI",
+      "source_file": "EMPACT-MI trial_NEJM_2024.pdf",
+      "checks": {
+        "n": "ok:\"6522\"",
+        "value": "ok:\"0.9\"",
+        "ci_low": "ok:\"0.76\"",
+        "ci_high": "ok:\"1.06\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "digit-hf",
+      "acronym": "DIGIT-HF",
+      "source_file": "DIGIT HF_2025.pdf",
+      "checks": {
+        "n": "ok:\"1212\"",
+        "value": "ok:\"0.82\"",
+        "ci_low": "ok:\"0.69\"",
+        "ci_high": "ok:\"0.98\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    },
+    {
+      "id": "decision",
+      "acronym": "DECISION",
+      "source_file": "Digoxin in HF_Decision Trial_2026.pdf",
+      "checks": {
+        "n": "ok:\"1001\"",
+        "value": "ok:\"0.81\"",
+        "ci_low": "ok:\"0.61\"",
+        "ci_high": "ok:\"1.07\""
+      },
+      "quotes_ok": "3/3",
+      "unverified_fields": [],
+      "needs_retry": false
+    }
+  ]
+}
