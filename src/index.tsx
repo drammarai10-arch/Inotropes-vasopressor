@@ -24,6 +24,7 @@ import {
   type Domain,
 } from './data'
 import { DIRECTION_LABELS, DESIGN_LABELS, BLINDING_LABELS, MULTICENTER_LABELS } from './labels'
+import { GLOSSARY, GLOSSARY_CATEGORY_LABELS, CONCEPTS, READING_GUIDE } from './learn'
 
 const app = new Hono()
 
@@ -123,6 +124,33 @@ app.get('/api/quiz', (c) => {
   return c.json({ seed, count: questions.length, questions })
 })
 
+/**
+ * Educational layer: glossary, concept articles and the reading walkthrough.
+ *
+ * Served from the same Worker as the dataset so a worked example and the trial
+ * it points at can never diverge. `examples[]` carry only trial ids — the
+ * client resolves the figures live from /api/trials/:id.
+ */
+app.get('/api/learn', (c) =>
+  c.json({
+    glossary: GLOSSARY,
+    glossary_categories: GLOSSARY_CATEGORY_LABELS,
+    concepts: CONCEPTS,
+    reading_guide: READING_GUIDE,
+  })
+)
+
+/**
+ * Single glossary term, by URL-encoded name (case-insensitive).
+ * Used for deep links such as #/learn?term=Hazard%20ratio.
+ */
+app.get('/api/learn/term/:term', (c) => {
+  const wanted = c.req.param('term').trim().toLowerCase()
+  const entry = GLOSSARY.find((g) => g.term.toLowerCase() === wanted)
+  if (!entry) return c.json({ error: 'not_found', term: c.req.param('term') }, 404)
+  return c.json(entry)
+})
+
 /** Per-domain summary used by the timeline and the overview charts. */
 app.get('/api/domains', (c) =>
   c.json({
@@ -163,11 +191,16 @@ const SHELL = (origin: string) => `<!DOCTYPE html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CV Trial Evidence Base — statin, heart failure &amp; antithrombotic trials</title>
-<meta name="description" content="An interactive, source-verified evidence base of ${trials.length} landmark cardiovascular randomised trials (1986–2026), covering statins, heart failure and antithrombotic therapy. Every figure traced to its source publication." />
+<title>CV Trial Evidence Base — a source-verified guide to ${trials.length} landmark trials</title>
+<meta name="description" content="An interactive, source-verified evidence base of ${trials.length} landmark cardiovascular randomised trials (1986–2026), with a plain-language guide to reading hazard ratios, composite endpoints and non-inferiority results. Every figure traced to its source publication." />
 <meta name="color-scheme" content="light dark" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%AB%80%3C/text%3E%3C/svg%3E" />
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<meta property="og:title" content="CV Trial Evidence Base" />
+<meta property="og:description" content="${trials.length} source-verified cardiovascular trials, 1986–2026 — with an educational guide to reading the evidence." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d9488'/%3E%3Cpath d='M3 17h5l2.5-7 3.5 13 3.5-18 3 14 2.5-5h6' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link href="/static/styles.css" rel="stylesheet" />
 </head>
 <body>
@@ -176,14 +209,14 @@ const SHELL = (origin: string) => `<!DOCTYPE html>
   <div class="wrap header-inner">
     <a class="brand" href="#/explore" aria-label="Home — CV Trial Evidence Base">
       <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 40 40" width="34" height="34" role="presentation">
-          <path d="M2 21h6l3-8 4 15 4-21 4 17 3-6h12" fill="none" stroke="currentColor" stroke-width="2.6"
+        <svg viewBox="0 0 40 40" width="32" height="32" role="presentation">
+          <path d="M2 21h6l3-8 4 15 4-21 4 17 3-6h12" fill="none" stroke="currentColor" stroke-width="2.8"
                 stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
       <span class="brand-text">
         <strong>CV Trial Evidence Base</strong>
-        <small>${trials.length} source-verified cardiovascular trials · 1986–2026</small>
+        <small>${trials.length} verified trials · 1986–2026</small>
       </span>
     </a>
     <nav class="site-nav" aria-label="Primary">
@@ -192,6 +225,7 @@ const SHELL = (origin: string) => `<!DOCTYPE html>
       <a href="#/compare" data-nav="compare">Compare</a>
       <a href="#/timeline" data-nav="timeline">Timeline</a>
       <a href="#/quiz" data-nav="quiz">Quiz</a>
+      <a href="#/learn" data-nav="learn">Learn</a>
       <a href="#/about" data-nav="about">Methods</a>
     </nav>
     <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch colour theme" title="Switch colour theme">
