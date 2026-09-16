@@ -186,7 +186,7 @@ app.get('/favicon.ico', (c) => c.body(null, 204))
  * Single-page shell. All navigation happens client-side so that the app works
  * from a static asset bundle with no per-route server render.
  */
-const SHELL = (origin: string) => `<!DOCTYPE html>
+const SHELL = () => `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -251,6 +251,6 @@ const SHELL = (origin: string) => `<!DOCTYPE html>
 </body>
 </html>`
 
-app.get('*', (c) => c.html(SHELL(new URL(c.req.url).origin)))
+app.get('*', (c) => c.html(SHELL()))
 
 export default app

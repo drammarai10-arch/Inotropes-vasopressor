@@ -27,6 +27,7 @@ No bindings beyond static assets — no D1, no R2, no KV, no secrets.
 | **Compare** | `#/compare` | Up to five trials side by side across 20 fields (population, intervention, endpoint, effect, safety, limitations, source file), with preset selections. Highlights the smallest value where a minimum is meaningful. |
 | **Timeline** | `#/timeline` | Four decades of evidence. Clickable domain and five-year-period bar charts scope a chronological listing; every item links to its record. |
 | **Quiz** | `#/quiz` | Deterministic self-test (`?seed=&count=`) generated **only from verified figures**. Multiple-choice with per-question explanations that cite the source file. Seeded, so a seed always reproduces the same quiz. |
+| **Learn** | `#/learn` | The educational layer: a 6-step reading guide, 5 concept articles (hazard ratios, relative vs absolute effects, composite endpoints, non-inferiority, disagreeing trials) and a 37-term glossary in 6 themed groups, 16 of which carry a "common misreading" note. Inline glossary tooltips appear in the forest and compare explainers, and `?term=` deep-links to a highlighted definition. |
 | **Methods** | `#/about` | The extraction/verification pipeline, the verification ledger, coverage by domain and design, licensing, limitations, and the full API reference. |
 | **Trial detail** | `#/trial/<id>` | Modal with the primary result, secondary/subgroup results, safety signals, limitations, verbatim short extracts, full metadata and per-field provenance. |
 

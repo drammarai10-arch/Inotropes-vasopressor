@@ -75,6 +75,22 @@ async function main() {
   check('renders all 89 trial cards', cards.length === 89, `got ${cards.length}`)
   check('stat grid populated', document.querySelectorAll('.stat').length === 6)
   check('footer meta populated', (document.querySelector('#footer-meta')?.textContent || '').includes('89'))
+
+  // Regression guard: `h()` used to stringify a style object into
+  // "[object Object]", which silently blanked every inline-styled element
+  // (the mini-CI bands on all 89 cards). Assert the declarations really
+  // applied, not merely that the elements exist.
+  const badStyle = [...document.querySelectorAll('[style]')].filter((n) =>
+    (n.getAttribute('style') || '').includes('[object Object]')
+  )
+  check('no element has a stringified style object', badStyle.length === 0, `${badStyle.length} found`)
+  const band = document.querySelector('.mini-ci .band')
+  check(
+    'mini-CI band carries real positioning',
+    /left:\s*[\d.]+%/.test(band?.getAttribute('style') || '') && /width:\s*[\d.]+%/.test(band?.getAttribute('style') || ''),
+    band?.getAttribute('style') || 'missing'
+  )
+  check('learn cross-link banner on explore', Boolean(document.querySelector('.learn-cta .btn')))
   check(
     'first card carries a direction attribute',
     ['benefit', 'neutral', 'harm'].includes(cards[0].getAttribute('data-dir'))
@@ -114,6 +130,22 @@ async function main() {
   check('forest has a reference line at 1.0', document.querySelectorAll('.forest .refline').length > 0)
   check('forest lists row labels', document.querySelectorAll('.forest .row-acronym').length === 89)
   check('non-plottable rows annotated', document.body.textContent.includes('not plottable'))
+  check('forest explains how to read the plot', Boolean(document.querySelector('details.explainer')))
+  check('forest explainer defines a term inline', document.querySelectorAll('.explainer .term').length > 0)
+  // Every inline term must point at a definition element that actually exists,
+  // and the popover must offer a route into the glossary. A term with no
+  // glossary entry degrades to plain text, so this also guards that it does not
+  // silently render an orphaned trigger.
+  const forestTerms = [...document.querySelectorAll('.explainer .term')]
+  check(
+    'forest tooltips resolve to a real definition',
+    forestTerms.length > 0 &&
+      forestTerms.every((c) => Boolean(document.getElementById(c.getAttribute('aria-describedby'))))
+  )
+  check(
+    'forest tooltip links into the glossary',
+    Boolean(document.querySelector('.explainer .term-pop a[href^="#/learn?term="]'))
+  )
 
   // ----------------------------------------------------------- compare view
   console.log('\n[compare]')
@@ -127,6 +159,14 @@ async function main() {
   check('compare renders one column per trial', document.querySelectorAll('table.cmp thead th').length === 4)
   check('compare renders a row per field', document.querySelectorAll('table.cmp tbody tr').length >= 18)
   check('compare marks smallest sample size', document.querySelector('table.cmp').textContent.includes('smallest'))
+  check('compare warns what the table cannot show', Boolean(document.querySelector('details.explainer')))
+  check('compare explainer cross-links to the guide', document.querySelectorAll('.explainer .term').length > 0)
+  const cmpTerms = [...document.querySelectorAll('.explainer .term')]
+  check(
+    'compare tooltips resolve to a real definition',
+    cmpTerms.length > 0 &&
+      cmpTerms.every((c) => Boolean(document.getElementById(c.getAttribute('aria-describedby'))))
+  )
 
   // ---------------------------------------------------------- timeline view
   console.log('\n[timeline]')
@@ -176,6 +216,34 @@ async function main() {
   window.document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
   await waitFor(() => !document.querySelector('.modal-backdrop'), 3000, 'modal closed')
   check('Escape dismisses the modal', !document.querySelector('.modal-backdrop'))
+
+  // -------------------------------------------------------------- learn view
+  console.log('\n[learn]')
+  window.location.hash = '#/learn'
+  await waitFor(() => document.querySelectorAll('.gloss').length > 0, 5000, 'learn view')
+  check('learn renders the hero', document.querySelectorAll('.learn-hero').length === 1)
+  check('learn lists 6 reading-guide steps', document.querySelectorAll('.guide-step').length === 6, `got ${document.querySelectorAll('.guide-step').length}`)
+  check('learn lists 5 concept articles', document.querySelectorAll('.concept').length === 5, `got ${document.querySelectorAll('.concept').length}`)
+  check('learn lists 37 glossary terms', document.querySelectorAll('.gloss').length === 37, `got ${document.querySelectorAll('.gloss').length}`)
+  check('glossary grouped into 6 categories', document.querySelectorAll('.gloss-group').length === 6)
+  check('glossary notes common misreadings', document.querySelectorAll('.misread').length > 10)
+  check(
+    'workflow example resolves a verified figure',
+    /HR 0\.56 \(95% CI 0\.46–0\.69\)/.test(document.body.textContent)
+  )
+  check(
+    'worked examples link to real trial records',
+    [...document.querySelectorAll('.example-head a')].every((a) => a.getAttribute('href').startsWith('#/trial/'))
+  )
+  check('every example trial resolves', document.querySelectorAll('.example').length === 10, `got ${document.querySelectorAll('.example').length}`)
+  check('concepts cross-link glossary terms', document.querySelectorAll('.concept .see-link').length > 0)
+  check('learn discloses it is not medical advice', document.body.textContent.includes('not medical advice'))
+
+  // Deep link from a tooltip should land on the definition.
+  window.location.hash = `#/learn?term=${encodeURIComponent('Hazard ratio')}`
+  await waitFor(() => document.querySelector('#term-hazard-ratio'), 5000, 'term deep link')
+  await waitFor(() => document.querySelector('#term-hazard-ratio.hilite'), 2000, 'term highlight')
+  check('deep link highlights the requested term', Boolean(document.querySelector('#term-hazard-ratio.hilite')))
 
   // -------------------------------------------------------- theme + routing
   console.log('\n[theme]')

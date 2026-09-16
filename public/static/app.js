@@ -12,6 +12,7 @@
      #/compare[?ids=a,b,c]                                          side-by-side
      #/timeline[?period=&domain=]                                   chronology
      #/quiz[?count=&seed=]                                          self-test
+     #/learn[?term=]                                                educational guide
      #/about                                                        methods
      #/trial/<id>                                                   detail overlay
    ========================================================================== */
@@ -40,6 +41,11 @@ function h(tag, attrs, ...children) {
       if (key === 'class') node.className = value;
       else if (key === 'text') node.textContent = value;
       else if (key === 'dataset') Object.assign(node.dataset, value);
+      // A style object is merged property-by-property so custom properties
+      // (`background: 'var(--benefit)'`) resolve. Passing the object straight to
+      // setAttribute would stringify it to "[object Object]" and silently drop
+      // every declaration — which is what used to blank the mini-CI strips.
+      else if (key === 'style' && typeof value === 'object') Object.assign(node.style, value);
       else if (key.startsWith('on') && typeof value === 'function') {
         node.addEventListener(key.slice(2).toLowerCase(), value);
       } else node.setAttribute(key, value === true ? '' : String(value));
@@ -147,6 +153,8 @@ const state = {
   detail: new Map(),
   timeline: { period: null, domain: null },
   quiz: { questions: [], index: 0, answers: [], seed: 42, count: 10, done: false },
+  /** Educational payload from /api/learn: glossary, concepts, reading guide. */
+  learn: null,
   forest: { domain: null, source: 'any' },
   prevHash: '#/explore',
   returnHash: '#/explore',
@@ -872,6 +880,9 @@ VIEWS.explore = async function renderExplore(params) {
       'Explore the cardiovascular trial evidence base',
       `${fmtInt(m.unique_trials)} landmark randomised trials and related analyses published between ${m.years[0]} and ${m.years[1]}, spanning lipids, heart failure, acute coronary syndromes, atrial fibrillation and renin–angiotensin blockade. Every figure below was string-matched back to the source publication before it was published here.`
     ),
+    learnCta(
+      'Every card below reports an effect estimate with a confidence interval. If those are not yet familiar, the six-step guide explains what the numbers mean before you start filtering.'
+    ),
     h(
       'div',
       { class: 'stat-grid' },
@@ -1056,6 +1067,7 @@ VIEWS.forest = async function renderForest(params) {
       'Forest plot',
       `Side-by-side view of primary effects on a shared logarithmic axis. Marker area scales with trial size, colour with the direction of the result. Click any row to open the full record.`
     ),
+    forestExplainer(),
     h(
       'section',
       { class: 'filters', 'aria-label': 'Forest plot controls' },
@@ -1309,11 +1321,8 @@ VIEWS.compare = async function renderCompare(params) {
   mount(
     pageHead('Compare trials side by side', 'Up to five trials, one row per field. Values are the extracted, source-matched figures — where a number could not be matched it reads “—”.'),
     picker,
-    h('div', { class: 'table-scroll' }, table),
-    card(
-      h('h2', { text: 'Reading this table' }),
-      h('p', { class: 'muted small', text: 'Rows labelled “smallest” mark the lowest value in that row when every selected trial reported a comparable number — useful for sample size and effect size, meaningless for dates. Open a trial to see its confidence interval and the exact wording of the endpoint.' })
-    )
+    compareExplainer(),
+    h('div', { class: 'table-scroll' }, table)
   );
 };
 
@@ -1739,6 +1748,472 @@ function aboutRows() {
   ];
 }
 
+/* -------------------------------------------------------------------- learn */
+
+/*
+ * The educational layer. Authored prose lives in src/learn.ts and arrives over
+ * /api/learn; this file only renders it and supplies the interactive parts.
+ *
+ * The one rule that shapes the design: a worked example stores a *trial id*,
+ * never a number. Figures are resolved from the same verified records the rest
+ * of the application uses, so an example cannot drift from the dataset.
+ */
+
+/** Monotonic id source for the popovers rendered by `term()`. */
+let termSeq = 0;
+/** Lowercase term -> glossary entry. Built once, when the payload arrives. */
+let glossaryIndex = null;
+
+const slugify = (s) =>
+  String(s)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+function glossaryEntry(name) {
+  if (!glossaryIndex) {
+    glossaryIndex = new Map();
+    for (const g of state.learn?.glossary || []) glossaryIndex.set(g.term.toLowerCase(), g);
+  }
+  return glossaryIndex.get(String(name).toLowerCase()) || null;
+}
+
+/**
+ * Inline glossary trigger.
+ *
+ * The definition popover is a *sibling* of the trigger rather than a child,
+ * because a <button> may not contain interactive content and the popover ends
+ * with a link into the glossary. Unknown terms degrade to plain text, so
+ * authored prose never depends on a definition existing.
+ */
+function term(name, label) {
+  const entry = glossaryEntry(name);
+  if (!entry) return document.createTextNode(label ?? name);
+  const popId = `term-pop-${++termSeq}`;
+  return h(
+    'span',
+    { class: 'term-wrap' },
+    h('button', {
+      class: 'term',
+      type: 'button',
+      text: label ?? name,
+      // Described-by, not aria-expanded: the popover is revealed by CSS on
+      // hover/focus-within, and no JS flips a state attribute, so claiming
+      // 'expanded' would misreport the real state to a screen reader.
+      'aria-describedby': popId,
+    }),
+    h(
+      'span',
+      { class: 'term-pop', id: popId },
+      h('strong', { text: entry.term }),
+      h('span', { class: 'def', text: entry.short }),
+      h('a', { href: `#/learn?term=${encodeURIComponent(entry.term)}`, text: 'Full definition →' })
+    )
+  );
+}
+
+const scrollToSection = (id) => {
+  document.getElementById(id)?.scrollIntoView({ block: 'start' });
+};
+
+/**
+ * Cross-link banner inviting the reader into the educational layer. Declared as
+ * a function so it is hoisted: the views that use it are defined above it.
+ */
+function learnCta(text) {
+  return h(
+    'div',
+    { class: 'learn-cta' },
+    h('p', null, h('strong', { text: 'New to reading trial evidence? ' }), text),
+    h('button', {
+      class: 'btn primary',
+      type: 'button',
+      text: 'Open the reading guide',
+      onClick: () => go('#/learn'),
+    })
+  );
+}
+
+/** Scrolls the glossary to a term and flashes it, so a jump is never silent. */
+function jumpToTerm(name) {
+  const target = document.getElementById(`term-${slugify(name)}`);
+  if (!target) return;
+  target.scrollIntoView({ block: 'start' });
+  target.classList.add('hilite');
+  setTimeout(() => target.classList.remove('hilite'), 2200);
+}
+
+function callout(kind, icon, ...children) {
+  return h(
+    'div',
+    { class: `callout ${kind}` },
+    h('span', { class: 'ico', 'aria-hidden': 'true', text: icon }),
+    h('div', null, ...children)
+  );
+}
+
+function explainer(summary, ...children) {
+  return h(
+    'details',
+    { class: 'explainer' },
+    h('summary', { text: summary }),
+    h('div', { class: 'explainer-body' }, ...children)
+  );
+}
+
+/**
+ * "How to read this plot", attached to the forest view. Authored here rather
+ * than drawn from the trial records, so it carries no extracted claims.
+ */
+function forestExplainer() {
+  return explainer(
+    'How to read this plot',
+    h(
+      'ul',
+      null,
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Position' }),
+        ' — the estimate sits on a logarithmic axis centred on ',
+        h('span', { class: 'mono', text: '1.00' }),
+        ', the ',
+        term('Null value'),
+        '. Left of 1.00 means fewer events on the intervention.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Horizontal line' }),
+        ' — the ',
+        term('Confidence interval'),
+        '. Its width is how precisely the trial pinned the estimate down, and whether it crosses 1.00 decides what the trial may claim.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Marker' }),
+        ' — area scales with the number of participants. A larger trial is a more precise one, which is not the same as a better-designed one.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Colour' }),
+        ' — green favours the intervention, amber is neutral, red favours the comparator. Colour encodes direction only and is never used for decoration.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Crossing 1.00' }),
+        ' — an interval that crosses the null line means the trial did not exclude no effect. That is not the same as showing that there is no effect.'
+      )
+    ),
+    h(
+      'p',
+      null,
+      'Only the primary effect estimate is plotted. Subgroup and secondary results are recorded inside each trial and are not pooled, adjusted, or corrected for ',
+      term('Multiplicity'),
+      '.'
+    )
+  );
+}
+
+/** "What this table can and cannot tell you", attached to the compare view. */
+function compareExplainer() {
+  return explainer(
+    'What this table can and cannot tell you',
+    h(
+      'p',
+      null,
+      'Lining trials up side by side makes differences in design visible, which is usually the most informative thing about a set of trials. It does not make their results comparable.'
+    ),
+    h(
+      'ul',
+      null,
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Endpoints differ.' }),
+        ' A ',
+        term('Composite endpoint'),
+        ' in one row and a single outcome in another are different quantities, whatever their numbers suggest.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'Populations differ.' }),
+        ' Effects estimated in a high-risk population are not transferable to a low-risk one — the same relative change acts on very different absolute risks.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'The row marked “smallest” is not a ranking.' }),
+        ' It flags the lowest value in that row when every selected trial reported one. For sample size and effect size it is a real difference; for dates it is meaningless.'
+      ),
+      h(
+        'li',
+        null,
+        h('strong', { text: 'No adjustment is applied.' }),
+        ' This is not a ',
+        term('Meta-analysis'),
+        ' and nothing here is adjusted for ',
+        term('Multiplicity'),
+        '. Reading across rows is exploratory.'
+      )
+    ),
+    h(
+      'p',
+      null,
+      'For what a single result does and does not mean, read the ',
+      h('a', { href: '#/learn', text: 'Learn' }),
+      ' guide.'
+    )
+  );
+}
+
+/* --- learn view ---------------------------------------------------------- */
+
+function guideStep(step) {
+  return h(
+    'div',
+    { class: 'guide-step' },
+    h('span', { class: 'n', text: String(step.step) }),
+    h('h3', { text: step.title }),
+    h('p', { text: step.detail })
+  );
+}
+
+/**
+ * Worked example. `idx` is the trial index entry (verified figures); `full` is
+ * the full record, used only for the per-arm event rates, which are what turn a
+ * ratio into an absolute scale.
+ */
+function exampleCard(ex, idx, full) {
+  const eff = full?.primary_effect ?? {};
+  const abs =
+    eff.event_rate_intervention || eff.event_rate_comparator
+      ? `Events — intervention ${eff.event_rate_intervention ?? 'not reported'}; comparator ${eff.event_rate_comparator ?? 'not reported'}.`
+      : null;
+  return h(
+    'div',
+    { class: 'example', dataset: { dir: idx.direction } },
+    h(
+      'div',
+      { class: 'example-head' },
+      h('a', { href: `#/trial/${idx.id}`, text: `${idx.acronym}${idx.year ? ` ${idx.year}` : ''}` }),
+      h('span', { class: 'fx', text: effectText(idx) }),
+      dirBadge(idx.direction)
+    ),
+    h('p', { class: 'pt', text: ex.point }),
+    abs ? h('p', { class: 'abs', text: abs }) : null
+  );
+}
+
+function conceptArticle(concept, cards) {
+  return h(
+    'article',
+    { class: 'concept', id: `concept-${concept.id}` },
+    h(
+      'header',
+      { class: 'concept-head' },
+      h('h3', { text: concept.title }),
+      h('p', { text: concept.summary }),
+      h(
+        'div',
+        { class: 'concept-meta' },
+        h('span', { text: `${concept.reading_minutes} min read` }),
+        h('span', { text: `${concept.sections.length} sections` }),
+        h('span', { text: `${concept.glossary.length} glossary terms` })
+      )
+    ),
+    h(
+      'div',
+      { class: 'concept-body' },
+      ...concept.sections.map((sec) =>
+        h(
+          'section',
+          { class: 'concept-sec' },
+          h('h4', { text: sec.heading }),
+          ...sec.body.map((p) => h('p', { text: p }))
+        )
+      ),
+      h('p', { class: 'takeaway' }, h('b', { text: 'Takeaway' }), concept.takeaway),
+      cards.length
+        ? h(
+            'div',
+            { class: 'examples' },
+            h('h4', { text: 'Worked examples from this dataset' }),
+            ...cards
+          )
+        : null,
+      concept.glossary.length
+        ? h(
+            'div',
+            { class: 'see' },
+            h('span', { text: 'Terms in this article:' }),
+            ...concept.glossary.map((name) =>
+              h('button', {
+                class: 'see-link',
+                type: 'button',
+                text: name,
+                onClick: () => jumpToTerm(name),
+              })
+            )
+          )
+        : null
+    )
+  );
+}
+
+function glossCard(g) {
+  return h(
+    'article',
+    { class: 'gloss', id: `term-${slugify(g.term)}`, dataset: { term: g.term } },
+    h('h4', { text: g.term }),
+    h('p', { text: g.long }),
+    g.misconception
+      ? h('span', { class: 'misread' }, h('b', { text: 'Common misreading' }), g.misconception)
+      : null,
+    g.see_also?.length
+      ? h(
+          'div',
+          { class: 'see' },
+          h('span', { text: 'See also:' }),
+          ...g.see_also.map((name) =>
+            h('button', {
+              class: 'see-link',
+              type: 'button',
+              text: name,
+              onClick: () => jumpToTerm(name),
+            })
+          )
+        )
+      : null
+  );
+}
+
+VIEWS.learn = async function renderLearn(params) {
+  const learn = state.learn;
+  if (!learn) {
+    mount(
+      pageHead('Learn', 'A plain-language guide to reading trial evidence'),
+      errorCard(
+        'The educational content could not be loaded. The rest of the application is unaffected — the educational layer is a separate request.',
+        () => location.reload()
+      )
+    );
+    return;
+  }
+
+  // Resolve every worked example before painting: examples reference trial ids
+  // only, so the figures shown are always the verified ones. Requests are
+  // cached by `trialDetail`, and a failure drops that single example rather
+  // than the article.
+  const exampleIds = [...new Set(learn.concepts.flatMap((c) => c.examples.map((e) => e.trial_id)))];
+  await Promise.all(exampleIds.map((id) => trialDetail(id).catch(() => null)));
+
+  const cardsFor = (concept) =>
+    concept.examples
+      .map((ex) => {
+        const idx = state.trials.find((t) => t.id === ex.trial_id);
+        return idx ? exampleCard(ex, idx, state.detail.get(ex.trial_id)) : null;
+      })
+      .filter(Boolean);
+
+  // Glossary is grouped by category and kept in authored order: the sequence
+  // inside a category is pedagogical (related measures sit together), so it is
+  // deliberately not alphabetised.
+  const byCategory = new Map();
+  for (const g of learn.glossary) {
+    if (!byCategory.has(g.category)) byCategory.set(g.category, []);
+    byCategory.get(g.category).push(g);
+  }
+  const categoryOrder = Object.keys(learn.glossary_categories).filter((k) => byCategory.has(k));
+
+  mount(
+    h(
+      'section',
+      { class: 'learn-hero' },
+      h('h1', { text: 'How to read a cardiovascular trial' }),
+      h('p', {
+        text: 'A short course in the numbers this evidence base reports. Nothing here is a recommendation for any treatment — it is the reading skill needed to interpret a randomised trial result, illustrated with worked examples from the trials in this dataset.',
+      }),
+      h(
+        'div',
+        { class: 'hero-meta' },
+        h('span', { class: 'tag', text: `${learn.reading_guide.length}-step reading guide` }),
+        h('span', { class: 'tag', text: `${learn.concepts.length} concept articles` }),
+        h('span', { class: 'tag', text: `${learn.glossary.length} glossary terms` })
+      )
+    ),
+
+    callout(
+      'info',
+      '❖',
+      h(
+        'p',
+        null,
+        h('strong', { text: 'Teaching material, not medical advice. ' }),
+        'This explains how to read trial evidence in general terms. It does not recommend any treatment and does not replace clinical judgement. The examples are real trials from this dataset — open any of them to see the source-verified figures and the original publication they came from.'
+      )
+    ),
+
+    h(
+      'nav',
+      { class: 'learn-toc', 'aria-label': 'On this page' },
+      h('button', { type: 'button', text: 'Reading guide', onClick: () => scrollToSection('learn-guide') }),
+      h('button', { type: 'button', text: 'Concept articles', onClick: () => scrollToSection('learn-concepts') }),
+      h('button', { type: 'button', text: 'Glossary', onClick: () => scrollToSection('learn-glossary') }),
+      h('span', { class: 'spacer' }),
+      h('button', { type: 'button', text: 'Browse the evidence →', onClick: () => go('#/explore') })
+    ),
+
+    h(
+      'section',
+      { class: 'learn-section', id: 'learn-guide' },
+      h('h2', { text: 'The six-step reading guide' }),
+      h('p', {
+        class: 'prose muted',
+        text: 'Work through a trial report in this order. Most misreadings of trial evidence come from starting at step three.',
+      }),
+      h('div', { class: 'guide' }, ...learn.reading_guide.map(guideStep))
+    ),
+
+    h(
+      'section',
+      { class: 'learn-section', id: 'learn-concepts' },
+      h('h2', { text: 'Concept articles' }),
+      h('p', {
+        class: 'prose muted',
+        text: 'Five short readings on the ideas that cause the most difficulty in practice, each closing with worked examples drawn from this dataset.',
+      }),
+      ...learn.concepts.map((c) => conceptArticle(c, cardsFor(c)))
+    ),
+
+    h(
+      'section',
+      { class: 'learn-section', id: 'learn-glossary' },
+      h('h2', { text: 'Glossary' }),
+      h('p', {
+        class: 'prose muted',
+        text: 'Grouped by theme rather than alphabetically, so related measures sit together. Terms are cross-linked: select one to jump to its definition. A “common misreading” note appears wherever a term is routinely misinterpreted.',
+      }),
+      ...categoryOrder.map((cat) =>
+        h(
+          'div',
+          { class: 'gloss-group' },
+          h('h3', { text: learn.glossary_categories[cat] }),
+          h('div', { class: 'gloss-grid' }, ...byCategory.get(cat).map(glossCard))
+        )
+      )
+    )
+  );
+
+  // Deep link from an inline tooltip: bring the definition into view.
+  const wanted = params.get('term');
+  if (wanted) jumpToTerm(wanted);
+};
+
 VIEWS.about = async function renderAbout() {
   const m = state.meta;
   const domains = state.domains;
@@ -1909,10 +2384,13 @@ async function boot() {
   $('#theme-toggle').addEventListener('click', toggleTheme);
   const view = $('#view');
   try {
-    const [meta, list, domains] = await Promise.all([
+    const [meta, list, domains, learn] = await Promise.all([
       api.json('/api/meta'),
       api.json('/api/trials?limit=500'),
       api.json('/api/domains'),
+      // Educational content is optional: if it fails to load the Learn view
+      // degrades to a notice instead of taking the whole application down.
+      api.json('/api/learn').catch(() => null),
     ]);
     state.meta = meta;
     state.labels = {
@@ -1924,6 +2402,7 @@ async function boot() {
     };
     state.trials = list.trials;
     state.domains = domains.domains;
+    state.learn = learn;
   } catch (err) {
     view.setAttribute('aria-busy', 'false');
     view.replaceChildren(errorCard(String(err.message || err), () => location.reload()));

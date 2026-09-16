@@ -577,12 +577,15 @@ ul.plain li::before { content: '▸'; position: absolute; left: 0; color: var(--
   backdrop-filter: saturate(160%) blur(10px);
   border-bottom: 1px solid var(--border);
 }
-.learn-toc a {
-  font-size: 12.5px; font-weight: 600; text-decoration: none;
+.learn-toc a,
+.learn-toc button {
+  font: inherit; font-size: 12.5px; font-weight: 600; text-decoration: none;
   color: var(--text-muted); padding: 6px 12px; border-radius: 999px;
   border: 1px solid var(--border); white-space: nowrap;
+  background: none; cursor: pointer; line-height: 1.5;
 }
-.learn-toc a:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.learn-toc a:hover,
+.learn-toc button:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 .learn-toc .spacer { flex: 1 1 12px; }
 
 .learn-section { scroll-margin-top: calc(var(--header-h) + 62px); }
@@ -647,7 +650,9 @@ ul.plain li::before { content: '▸'; position: absolute; left: 0; color: var(--
 .gloss > h4 { margin: 0 0 7px; font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
 .gloss > p { font-size: 13px; line-height: 1.65; color: var(--text-muted); margin: 0 0 10px; }
 .gloss > p:last-child { margin-bottom: 0; }
-.gloss .see {
+/* Shared "see also" / "terms in this article" chip row, used by the glossary
+   cards and by the concept articles. */
+.see {
   display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
   font-size: 11.5px; color: var(--text-faint); margin-top: 12px;
 }
@@ -721,11 +726,14 @@ ul.plain li::before { content: '▸'; position: absolute; left: 0; color: var(--
 
 /* --- inline term tooltip ------------------------------------------------- */
 
+/* The definition popover is a *sibling* of the trigger, not a child: a <button>
+   may not contain interactive content, and the popover ends with a link. */
+.term-wrap { position: relative; display: inline-block; }
+
 .term {
-  font: inherit; color: inherit; background: none; border: 0; padding: 0;
+  font: inherit; color: inherit; background: none; border: 0; padding: 0 0 1px;
   border-bottom: 1.5px dotted var(--accent-line);
-  cursor: help; text-align: inherit; position: relative;
-  display: inline-block; line-height: inherit;
+  cursor: help; text-align: inherit; line-height: inherit;
 }
 .term:hover { color: var(--accent); }
 .term-pop {
@@ -736,8 +744,14 @@ ul.plain li::before { content: '▸'; position: absolute; left: 0; color: var(--
   padding: 13px 15px; font-size: 12.5px; line-height: 1.62;
   font-weight: 400; color: var(--text); text-align: left;
 }
-.term[aria-expanded='true'] .term-pop { display: block; }
+/* Revealed on hover or keyboard focus. No JS toggles a state class, so the
+   matching is done entirely in CSS and `aria-describedby` (not aria-expanded)
+   is what associates the trigger with its definition. */
+.term-wrap:hover .term-pop,
+.term-wrap:focus-within .term-pop { display: block; }
 .term-pop > strong { display: block; margin-bottom: 4px; font-size: 12.5px; color: var(--accent); }
+.term-pop .def { display: block; }
+.term-pop a { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 600; }
 
 /* --- explainers and callouts --------------------------------------------- */
 
