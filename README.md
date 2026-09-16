@@ -15,7 +15,8 @@ established from the source are rendered as absent rather than guessed.
 **Live:** https://b8bf327f-7569-435b-8ac6-9d86e947dab7.vip.gensparksite.com
 
 Deployed to Cloudflare Workers for Platform (Genspark-managed account) via `gsk hosted deploy`.
-Worker `b8bf327f-7569-435b-8ac6-9d86e947dab7`, 409 KiB upload / 91 KiB gzip, 7 ms startup.
+Worker `b8bf327f-7569-435b-8ac6-9d86e947dab7`, version `d44a2238-8eae-4af0-b850-f14960b67ba5`,
+447 KiB upload / 103 KiB gzip, 6 ms startup.
 No bindings beyond static assets — no D1, no R2, no KV, no secrets.
 
 ## Features
