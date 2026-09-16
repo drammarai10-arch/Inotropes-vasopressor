@@ -12,7 +12,11 @@ established from the source are rendered as absent rather than guessed.
 
 ## Public URL
 
-- **Hosted deployment:** see the project's Deploy panel (Genspark-hosted Cloudflare Workers).
+**Live:** https://b8bf327f-7569-435b-8ac6-9d86e947dab7.vip.gensparksite.com
+
+Deployed to Cloudflare Workers for Platform (Genspark-managed account) via `gsk hosted deploy`.
+Worker `b8bf327f-7569-435b-8ac6-9d86e947dab7`, 409 KiB upload / 91 KiB gzip, 7 ms startup.
+No bindings beyond static assets — no D1, no R2, no KV, no secrets.
 
 ## Features
 
