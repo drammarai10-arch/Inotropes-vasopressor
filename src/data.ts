@@ -1,10 +1,14 @@
 /**
  * Data layer for the Cardiovascular Outcomes Trial Evidence Base.
  *
- * The dataset is produced by the extraction pipeline in `pipeline/` and is
- * import-time verified: every numeric field carries a `provenance` verdict
- * ('verified' | 'derived' | 'absent') established by string-matching the value
- * against its source document text. See pipeline/verify.mjs.
+ * The dataset is import-time verified: every numeric field carries a
+ * `provenance` verdict ('verified' | 'derived' | 'absent') established by
+ * string-matching the value against its source document text.
+ *
+ * The evidence briefs (`content/briefs-index.json` plus the per-trial assets in
+ * `public/static/briefs/`) are produced by the quote-anchored verifier described
+ * in README.md: an item survives only if its quotation can be located in its
+ * own source document, and every displayed figure is checked against that text.
  */
 import dataset from '../content/trials.json'
 import briefIndexData from '../content/briefs-index.json'
