@@ -155,6 +155,8 @@ const state = {
   quiz: { questions: [], index: 0, answers: [], seed: 42, count: 10, done: false },
   /** Educational payload from /api/learn: glossary, concepts, reading guide. */
   learn: null,
+  /** Cache of evidence briefs, keyed by trial id. Holds promises, not values. */
+  briefs: new Map(),
   forest: { domain: null, source: 'any' },
   prevHash: '#/explore',
   returnHash: '#/explore',
@@ -394,6 +396,11 @@ async function openTrial(id) {
   document.body.append(backdrop);
   $('.modal-head .icon-btn', backdrop).focus();
 
+  // The brief is a separate static asset, so the dialog paints immediately and
+  // the brief streams in behind it. A failure degrades to a notice rather than
+  // an empty panel that would read as "this trial has nothing to report".
+  hydrateBrief(trial.id);
+
   backdrop.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       e.stopPropagation();
@@ -474,6 +481,8 @@ function trialDetailBody(t) {
 
     card(h('h2', { text: 'Key finding' }), h('p', { text: t.key_finding_oneliner })),
 
+    briefCard(t),
+
     t.secondary_results.length
       ? card(
           h('h2', { text: 'Secondary and subgroup results' }),
@@ -531,6 +540,269 @@ function trialDetailBody(t) {
       t.extraction_notes ? `Extraction notes: ${t.extraction_notes}` : 'No extraction caveats recorded for this record.'
     ),
   ];
+}
+
+/* ------------------------------------------------------------ evidence brief */
+
+/**
+ * Ordered sections of the evidence brief.
+ *
+ * The order is the reading order of an evidence summary: the conclusion first,
+ * then the supporting points, then the qualifying methodological detail.
+ *
+ * `kind` selects the renderer:
+ *   prose       the extractor's own sentences (guarded numerically, not quoted)
+ *   claims      items carrying a verbatim quotation
+ *   baseline    the two-arm characteristic table
+ *   criticisms  quoted items carrying an authorship label
+ */
+const BRIEF_SECTIONS = [
+  { key: 'bottom_line', label: 'Bottom line', kind: 'prose', open: true },
+  { key: 'major_points', label: 'Major points', kind: 'claims', open: true },
+  { key: 'implications', label: 'Implications', kind: 'prose' },
+  {
+    key: 'guidelines_referenced',
+    label: 'Guidelines cited',
+    kind: 'claims',
+    // Stated plainly because the distinction matters and the extractor cannot
+    // bridge it: a citation is what the document contains. Whether a trial
+    // CHANGED a recommendation is not established by the article text.
+    note: 'Guidelines this article cites. The extraction can show that a guideline is referenced; it cannot show that this trial altered that guideline, so no such claim is made here.',
+  },
+  { key: 'inclusion_criteria', label: 'Inclusion criteria', kind: 'claims' },
+  { key: 'exclusion_criteria', label: 'Exclusion criteria', kind: 'claims' },
+  { key: 'baseline', label: 'Baseline characteristics', kind: 'baseline' },
+  { key: 'criticisms', label: 'Criticisms', kind: 'criticisms' },
+];
+
+/**
+ * Coarse traceability bucket for a quotation.
+ *
+ * `reconstructed` is shown rather than hidden: these source PDFs are
+ * two-column articles whose text layer serialises line by line, so a correct
+ * quotation often has to be reassembled across a column break. The wording is
+ * the document's; the byte-exact typography is not guaranteed. A reader
+ * checking a quotation deserves to know which case they are looking at.
+ */
+const TRACE_META = {
+  verbatim: {
+    label: 'verbatim',
+    title: 'A contiguous extract of the source document text.',
+  },
+  normalised: {
+    label: 'verbatim \u00b7 rejoined',
+    title: 'A contiguous extract of the source, rejoined where a word was hyphenated across a line break.',
+  },
+  reconstructed: {
+    label: 'reconstructed',
+    title:
+      'Every word of this extract appears in order in the source document, but the source text is a line-by-line serialisation of a two-column page, so the extract had to be reassembled across a column break. The wording is the source\u2019s; the exact typography is not guaranteed.',
+  },
+};
+
+function traceTag(trace) {
+  const meta = TRACE_META[trace] || TRACE_META.reconstructed;
+  return h('span', {
+    class: `trace trace-${TRACE_META[trace] ? trace : 'reconstructed'}`,
+    title: meta.title,
+    text: meta.label,
+  });
+}
+
+/** One quoted claim: the paraphrased point, any label, the quotation, provenance. */
+function briefClaim(item, label) {
+  return h(
+    'li',
+    { class: 'brief-item' },
+    item.text ? h('p', { class: 'brief-text', text: item.text }) : null,
+    label ? h('p', { class: 'brief-meta', text: label }) : null,
+    item.quote ? h('blockquote', { class: 'brief-quote', text: `\u201c${item.quote}\u201d` }) : null,
+    traceTag(item.trace)
+  );
+}
+
+/** Baseline characteristic: both arms side by side, then the source table row. */
+function briefBaselineRow(item) {
+  return h(
+    'li',
+    { class: 'brief-item' },
+    h(
+      'div',
+      { class: 'brief-baseline' },
+      h('span', { class: 'bb-char', text: item.characteristic || '\u2014' }),
+      h('span', { class: 'bb-val', text: item.intervention ?? '\u2014' }),
+      h('span', { class: 'bb-val', text: item.comparator ?? '\u2014' })
+    ),
+    item.quote ? h('blockquote', { class: 'brief-quote', text: `\u201c${item.quote}\u201d` }) : null,
+    traceTag(item.trace)
+  );
+}
+
+function briefSection(section, brief) {
+  const prose = section.kind === 'prose' ? brief[section.key] : null;
+  const items = section.kind === 'prose' ? [] : brief[section.key] || [];
+  const count = section.kind === 'prose' ? (prose ? 1 : 0) : items.length;
+
+  const body = [];
+  if (section.note) body.push(h('p', { class: 'brief-note', text: section.note }));
+
+  if (!count) {
+    body.push(
+      h('p', {
+        class: 'muted small',
+        text: 'Nothing in this section could be verified against the source document.',
+      })
+    );
+  } else if (section.kind === 'prose') {
+    body.push(h('p', { class: 'brief-prose', text: prose }));
+  } else if (section.kind === 'baseline') {
+    body.push(
+      h(
+        'div',
+        { class: 'brief-baseline-head' },
+        h('span', { class: 'bb-char', text: 'Characteristic' }),
+        h('span', { class: 'bb-val', text: 'Intervention' }),
+        h('span', { class: 'bb-val', text: 'Comparator' })
+      ),
+      h('ul', { class: 'brief-list' }, ...items.map(briefBaselineRow))
+    );
+  } else {
+    body.push(
+      h(
+        'ul',
+        { class: 'brief-list' },
+        ...items.map((it) =>
+          briefClaim(
+            it,
+            section.kind === 'criticisms'
+              ? it.kind === 'author_stated'
+                ? 'Stated by the trial\u2019s own authors'
+                : 'Raised within the article'
+              : null
+          )
+        )
+      )
+    );
+  }
+
+  return h(
+    'details',
+    { class: 'brief-section', open: section.open === true ? true : null },
+    h(
+      'summary',
+      null,
+      h('span', { class: 'brief-label', text: section.label }),
+      h('span', { class: `brief-count${count ? '' : ' empty'}`, text: count ? String(count) : '\u2014' })
+    ),
+    h('div', { class: 'brief-body' }, ...body)
+  );
+}
+
+/** Per-section verified counts, for the at-a-glance row of pills. */
+const briefPills = (brief) =>
+  BRIEF_SECTIONS.filter((s) => s.kind !== 'prose').map((s) => ({
+    label: s.label,
+    n: (brief.counts || {})[s.key] || 0,
+  }));
+
+/**
+ * The brief card. Painted with a placeholder and hydrated afterwards, so a slow
+ * fetch delays only the brief and never the dialog around it.
+ */
+function briefCard(t) {
+  return card(
+    h(
+      'div',
+      { class: 'brief-head' },
+      h('h2', { text: 'Evidence brief' }),
+      h('span', { class: 'tag', text: 'quotation-anchored' })
+    ),
+    h(
+      'div',
+      { class: 'brief-root', dataset: { trialId: t.id }, 'aria-live': 'polite' },
+      h('p', { class: 'muted small', text: 'Loading evidence brief\u2026' })
+    )
+  );
+}
+
+/**
+ * Fetch a trial's brief.
+ *
+ * Briefs are static assets under `/static/briefs/`, which dist/_routes.json
+ * excludes from the Worker, so this is a CDN read that never bills the edge
+ * function. The promise is cached rather than the resolved value so that two
+ * callers racing for the same brief issue one request between them.
+ */
+function loadBrief(id) {
+  if (state.briefs.has(id)) return state.briefs.get(id);
+  const pending = fetch(`/static/briefs/${encodeURIComponent(id)}.json`, {
+    headers: { accept: 'application/json' },
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null);
+  state.briefs.set(id, pending);
+  return pending;
+}
+
+async function hydrateBrief(id) {
+  const brief = await loadBrief(id);
+
+  // The dialog may have closed, or been reopened on a different trial, while
+  // the brief was in flight. Re-resolve the host from the live document and
+  // abandon the write if it no longer matches.
+  const host = $('.modal-backdrop .brief-root');
+  if (!host || host.dataset.trialId !== id) return;
+
+  if (!brief) {
+    host.replaceChildren(
+      h('p', {
+        class: 'muted small',
+        text: 'The evidence brief could not be loaded. The trial record above is unaffected — it comes from a different source.',
+      })
+    );
+    return;
+  }
+
+  if (brief.status !== 'verified') {
+    // Stated as an absence, not rendered as an empty brief, so the gap cannot
+    // be mistaken for a finding of "nothing to report".
+    host.replaceChildren(
+      h('p', { class: 'brief-gap', text: 'No evidence brief was extracted for this trial.' }),
+      h('p', {
+        class: 'muted small',
+        text:
+          'Extraction from the source document was attempted and did not complete, so these sections are absent rather than empty. The structured trial record above comes from a separate pass and is unaffected.',
+      })
+    );
+    return;
+  }
+
+  host.replaceChildren(
+    h(
+      'div',
+      { class: 'brief-summary' },
+      h('p', {
+        class: 'small',
+        text: `${brief.verified_claims} claims verified against “${brief.source_file}”`,
+      }),
+      h(
+        'div',
+        { class: 'brief-pills' },
+        ...briefPills(brief).map((p) =>
+          h('span', {
+            class: `brief-pill${p.n ? '' : ' empty'}`,
+            text: `${p.label} \u00b7 ${p.n}`,
+          })
+        )
+      )
+    ),
+    ...BRIEF_SECTIONS.map((s) => briefSection(s, brief)),
+    h(
+      'p',
+      { class: 'brief-foot small faint' },
+      'Each claim above is anchored to a quotation that was matched against the source document. Quotations are reproduced for scholarly citation; copyright remains with the publishers and authors.'
+    )
+  );
 }
 
 /* ------------------------------------------------------------------ explore */
@@ -2418,6 +2690,19 @@ async function boot() {
 
   window.addEventListener('hashchange', () => {
     route().catch((err) => mount(pageHead('Error'), errorCard(String(err.message || err), () => location.reload())));
+  });
+
+  // A collapsed <details> hides its content in the UA's internal slot, which no
+  // stylesheet can override. Open every brief section for the duration of a
+  // print so a reader cannot lose evidence that happened to be folded away.
+  let closedForPrint = [];
+  window.addEventListener('beforeprint', () => {
+    closedForPrint = [...document.querySelectorAll('details.brief-section:not([open])')];
+    for (const d of closedForPrint) d.open = true;
+  });
+  window.addEventListener('afterprint', () => {
+    for (const d of closedForPrint) d.open = false;
+    closedForPrint = [];
   });
 
   try {

@@ -19,6 +19,8 @@ import {
   trialById,
   buildQuiz,
   isPlottable,
+  briefMeta,
+  briefIndex,
   DOMAIN_LABELS,
   DOMAIN_ORDER,
   type Domain,
@@ -52,6 +54,47 @@ app.get('/api/meta', (c) =>
     source_documents_ingested: 91,
     duplicates_removed: 5,
     plottable_effect_sizes: trials.filter(isPlottable).length,
+    briefs: briefMeta,
+  })
+)
+
+/**
+ * Evidence brief for one trial, proxied from the static asset so an API
+ * consumer has a single origin to talk to.
+ *
+ * The brief files themselves live under `/static/briefs/` and are served by
+ * the CDN without waking the Worker (see dist/_routes.json). This endpoint
+ * exists for programmatic access; the browser client fetches the static asset
+ * directly to stay off the Worker's request path.
+ */
+app.get('/api/briefs/:id', async (c) => {
+  const id = c.req.param('id')
+  if (!trialById(id)) return c.json({ error: 'not_found', id }, 404)
+  const entry = briefIndex.trials[id]
+  if (!entry) return c.json({ error: 'no_brief', id }, 404)
+  const res = await c.env?.ASSETS?.fetch(new URL(`/static/briefs/${id}.json`, c.req.url))
+  if (!res || !res.ok) {
+    // The index knows a brief exists but the asset is unreachable: report the
+    // gap explicitly rather than silently returning an empty brief.
+    return c.json({ error: 'brief_unavailable', id, status: entry.status }, 503)
+  }
+  return new Response(res.body, {
+    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=3600' },
+  })
+})
+
+/** Which trials have a verified brief, for list views and API consumers. */
+app.get('/api/briefs', (c) =>
+  c.json({
+    meta: briefMeta,
+    trials: Object.entries(briefIndex.trials).map(([id, e]) => ({
+      id,
+      acronym: trialById(id)?.acronym ?? id,
+      status: e.status,
+      verified_claims: e.verified_claims,
+      extracted_claims: e.extracted_claims,
+      reason: e.reason ?? null,
+    })),
   })
 )
 

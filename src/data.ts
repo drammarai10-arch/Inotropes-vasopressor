@@ -7,6 +7,7 @@
  * against its source document text. See pipeline/verify.mjs.
  */
 import dataset from '../content/trials.json'
+import briefIndexData from '../content/briefs-index.json'
 
 export type Domain =
   | 'lipids'
@@ -102,6 +103,66 @@ const DATA = dataset as unknown as { meta: DatasetMeta; trials: Trial[] }
 export const meta: DatasetMeta = DATA.meta
 export const trials: Trial[] = DATA.trials
 
+// ------------------------------------------------------------- evidence briefs
+//
+// The verified briefs themselves are served as individual static assets under
+// `/static/briefs/<id>.json` (see content/briefs-index.json). Only this compact
+// index is compiled into the Worker, so a list view can advertise that a brief
+// exists without the bundle carrying ~700 KiB of quotation text.
+
+/** Per-section verified claim counts, keyed by section name. */
+export interface BriefCounts {
+  major_points?: number
+  guidelines_referenced?: number
+  inclusion_criteria?: number
+  exclusion_criteria?: number
+  baseline?: number
+  criticisms?: number
+  criticisms_author_stated?: number
+  criticisms_in_document?: number
+}
+
+export interface BriefIndexEntry {
+  status: 'verified' | 'not_extracted'
+  verified_claims: number
+  extracted_claims: number
+  /** Present only when status is 'not_extracted'. */
+  reason?: string
+  counts?: BriefCounts
+}
+
+export interface BriefIndexMeta {
+  generated: string
+  source: string
+  trials_total: number
+  trials_with_brief: number
+  trials_not_extracted: number
+  not_extracted: { id: string; acronym: string; reason: string }[]
+  verification: {
+    claims_extracted: number | null
+    claims_verified: number | null
+    numeric_fields_checked: number | null
+    numeric_fields_dropped: number | null
+    tiers: Record<string, number> | null
+    layout_fallback_trials: { id: string; acronym: string; roChars: number; fullChars: number }[]
+  } | null
+  quote_stats: { count: number; total_chars: number; median_chars: number; p90_chars: number; max_chars: number }
+  sections: string[]
+  section_totals: Record<string, { verified: number; extracted: number }>
+  traceability: Record<string, string>
+  assets: { files: number; total_bytes: number; largest_trial: string; largest_bytes: number }
+}
+
+const BRIEFS = briefIndexData as unknown as { meta: BriefIndexMeta; trials: Record<string, BriefIndexEntry> }
+
+export const briefIndex = BRIEFS
+export const briefMeta: BriefIndexMeta = BRIEFS.meta
+
+/** True when a source-verified evidence brief exists for this trial id. */
+export function hasBrief(id: string): boolean {
+  return BRIEFS.trials[id]?.status === 'verified'
+}
+
 /** Ratio metrics can be plotted on a log scale; 'other' metrics cannot. */
 const RATIO_METRICS = new Set(['HR', 'RR', 'OR', 'IRR'])
 
@@ -169,6 +230,10 @@ export interface TrialIndexEntry {
   plottable: boolean
   key_finding: string
   source_file: string
+  /** True when a source-verified evidence brief exists for this trial. */
+  has_brief: boolean
+  /** Number of source-verified claims in that brief (0 when absent). */
+  brief_claims: number
 }
 
 export const trialIndex: TrialIndexEntry[] = trials.map((t) => ({
@@ -192,6 +257,8 @@ export const trialIndex: TrialIndexEntry[] = trials.map((t) => ({
   plottable: isPlottable(t),
   key_finding: t.key_finding_oneliner,
   source_file: t.source_file,
+  has_brief: briefIndex.trials[t.id]?.status === 'verified',
+  brief_claims: briefIndex.trials[t.id]?.verified_claims ?? 0,
 }))
 
 export function formatNumber(n: number | null): string {

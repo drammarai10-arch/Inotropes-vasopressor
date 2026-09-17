@@ -817,6 +817,142 @@ details.explainer[open] > summary {
   .term { border-bottom: none; }
 }
 
+/* ----------------------------------------------------------- evidence brief */
+
+/* The brief panel inside the trial dialog. Two ideas drive the layout:
+   the summary is scannable at a glance (pills), and every claim is visibly
+   tethered to its quotation, because the quotation is what makes the claim
+   checkable. The trace tag is a first-class element rather than a footnote:
+   for a two-column source the reader has a right to know whether an extract is
+   byte-exact or reassembled. */
+
+.brief-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.brief-head h2 { margin: 0; }
+
+.brief-root { font-size: 13.5px; }
+
+.brief-gap {
+  margin: 0 0 6px; padding: 11px 14px; border-radius: var(--radius);
+  background: var(--neutral-soft); border: 1px solid color-mix(in srgb, var(--neutral) 30%, transparent);
+  font-weight: 650;
+}
+
+.brief-summary { margin-bottom: 6px; }
+.brief-summary p { margin: 0 0 9px; color: var(--text-muted); }
+
+.brief-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.brief-pill {
+  font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  white-space: nowrap;
+}
+.brief-pill.empty { background: var(--surface-2); color: var(--text-faint); border-color: var(--border); }
+
+/* Collapsible sections: <details> so it works with no JavaScript and keeps
+   find-in-page and keyboard behaviour native. */
+details.brief-section {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 9px; background: var(--surface);
+  overflow: hidden;
+}
+details.brief-section > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 14px; cursor: pointer; list-style: none;
+  font-weight: 650; font-size: 13.5px; background: var(--surface-2);
+}
+details.brief-section > summary::-webkit-details-marker { display: none; }
+details.brief-section > summary::before {
+  content: '▸'; color: var(--text-faint); font-size: 11px; margin-right: 9px;
+}
+details.brief-section[open] > summary::before { content: '▾'; }
+details.brief-section > summary:hover { background: var(--surface-3); }
+details.brief-section > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+details.brief-section[open] > summary { border-bottom: 1px solid var(--border); }
+
+.brief-label { flex: 1; }
+.brief-count {
+  font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+  padding: 1px 8px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+}
+.brief-count.empty { background: var(--surface-3); color: var(--text-faint); }
+
+.brief-body { padding: 13px 14px; }
+
+.brief-note {
+  margin: 0 0 12px; padding: 9px 12px; font-size: 12.5px; line-height: 1.6;
+  color: var(--text-muted); background: var(--info-soft);
+  border-left: 3px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.brief-prose { margin: 0; font-size: 14px; line-height: 1.72; }
+
+.brief-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.brief-item { padding-left: 12px; border-left: 2px solid var(--border); }
+.brief-text { margin: 0 0 6px; font-size: 13.5px; line-height: 1.62; }
+.brief-meta {
+  margin: 0 0 5px; font-size: 11px; font-weight: 650; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+
+/* The quotation is the evidence, so it is styled as the visual anchor of each
+   item rather than as fine print. */
+blockquote.brief-quote {
+  margin: 0 0 6px; padding: 8px 12px; font-size: 12.5px; line-height: 1.58;
+  color: var(--text-muted); background: var(--surface-2);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  white-space: pre-wrap;
+}
+
+.trace {
+  display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.03em;
+  padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border);
+  color: var(--text-faint); background: var(--surface-2); cursor: help;
+}
+.trace-verbatim { color: var(--benefit); background: var(--benefit-soft); border-color: color-mix(in srgb, var(--benefit) 26%, transparent); }
+.trace-normalised { color: var(--info); background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 26%, transparent); }
+.trace-reconstructed { color: var(--neutral); background: var(--neutral-soft); border-color: color-mix(in srgb, var(--neutral) 30%, transparent); }
+
+/* Baseline table: same grid on the header and every row so the two arms line
+   up. Numeric columns are monospaced to keep the values comparable by eye. */
+.brief-baseline-head,
+.brief-baseline {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(74px, 124px) minmax(74px, 124px);
+  gap: 8px 10px; align-items: baseline;
+}
+.brief-baseline-head {
+  padding: 0 0 7px; border-bottom: 1px solid var(--border); margin-bottom: 11px;
+  font-size: 10.5px; font-weight: 650; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.brief-baseline { margin-bottom: 6px; }
+.bb-char { font-size: 13px; }
+.bb-val { font-family: var(--mono); font-size: 12.5px; }
+
+.brief-foot { margin: 14px 0 0; line-height: 1.6; }
+
+@media (max-width: 640px) {
+  .brief-baseline-head,
+  .brief-baseline { grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 6px; }
+  .bb-val { font-size: 11.5px; }
+  .brief-body { padding: 12px; }
+}
+
+@media print {
+  details.brief-section { break-inside: avoid; }
+  details.brief-section > summary { background: none; border-bottom: 1px solid #999; }
+  /* A closed <details> hides its content inside the UA's internal slot, which
+     no light-DOM rule can override, so sections are opened from JavaScript on
+     `beforeprint` instead — see the print handler in app.js. That keeps a
+     collapsed section from silently vanishing from a printed page. */
+  .trace { border-color: #999; }
+}
+
 /* ------------------------------------------------------------------ footer */
 
 .site-footer {

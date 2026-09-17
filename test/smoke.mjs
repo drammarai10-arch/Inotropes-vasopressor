@@ -45,6 +45,21 @@ async function waitFor(predicate, timeout = 4000, label = 'condition') {
 async function main() {
   const html = await (await fetch(`${BASE}/`)).text()
 
+  // --------------------------------------------------------------- brief API
+  // The brief index and the per-trial brief are separate surfaces from the
+  // trial records, so they are asserted directly rather than only through DOM.
+  console.log('\n[brief API]')
+  const briefList = await (await fetch(`${BASE}/api/briefs`)).json()
+  check('brief index covers every trial', briefList.trials.length === 89, `got ${briefList.trials.length}`)
+  check('brief index reports 83 verified briefs', briefList.meta.trials_with_brief === 83, `got ${briefList.meta.trials_with_brief}`)
+  check('brief index reports the 6 un-extracted trials', briefList.trials.filter((t) => t.status !== 'verified').length === 6)
+  check('brief index totals the verified claims', briefList.meta.verification.claims_verified === 2300, `got ${briefList.meta.verification.claims_verified}`)
+  const oneBrief = await (await fetch(`${BASE}/api/briefs/jupiter`)).json()
+  check('single-brief endpoint returns a verified brief', oneBrief.status === 'verified' && oneBrief.bottom_line.length > 40)
+  check('single-brief endpoint 404s an unknown trial', (await fetch(`${BASE}/api/briefs/not-a-trial`)).status === 404)
+  const gapBrief = await (await fetch(`${BASE}/api/briefs/advor`)).json()
+  check('un-extracted brief is served with its reason', gapBrief.status === 'not_extracted' && gapBrief.reason === 'extraction_failed')
+
   const consoleErrors = []
   const virtualConsole = new VirtualConsole()
   virtualConsole.on('jsdomError', (err) => consoleErrors.push(String(err.message || err)))
@@ -213,9 +228,65 @@ async function main() {
   check('modal suppresses background scroll', document.body.style.overflow === 'hidden')
   check('modal closes on Escape', true)
 
+  // ---------------------------------------------------------- evidence brief
+  // The brief is fetched as its own static asset and hydrated after the dialog
+  // paints, so these assertions wait for it rather than assuming it is present.
+  console.log('\n[evidence brief]')
+  await waitFor(() => document.querySelectorAll('.brief-section').length > 0, 6000, 'brief sections')
+  const briefSections = [...document.querySelectorAll('.brief-section')]
+  const briefLabels = briefSections.map((s) => s.querySelector('.brief-label').textContent)
+  check('brief renders all 8 sections', briefSections.length === 8, `got ${briefSections.length}`)
+  check('bottom line is the first section', briefLabels[0] === 'Bottom line', briefLabels[0])
+  check('major points is the second section', briefLabels[1] === 'Major points', briefLabels[1])
+  check(
+    'brief covers the remaining requested sections',
+    ['Guidelines cited', 'Inclusion criteria', 'Exclusion criteria', 'Baseline characteristics', 'Criticisms'].every(
+      (l) => briefLabels.includes(l)
+    ),
+    briefLabels.join(', ')
+  )
+  check('bottom line and major points open by default', document.querySelectorAll('details.brief-section[open]').length === 2)
+  check('brief leads with a bottom-line paragraph', Boolean(document.querySelector('.brief-prose')))
+  check(
+    'brief summarises per-section verified counts',
+    document.querySelectorAll('.brief-pill').length === 6,
+    `got ${document.querySelectorAll('.brief-pill').length}`
+  )
+  const briefQuotes = document.querySelectorAll('blockquote.brief-quote')
+  check('brief anchors claims to source quotations', briefQuotes.length > 10, `got ${briefQuotes.length}`)
+  check('every claim carries a traceability tag', document.querySelectorAll('.trace').length === briefQuotes.length)
+  check('baseline columns are labelled', document.querySelectorAll('.brief-baseline-head > *').length === 3)
+  const baselineRows = [...document.querySelectorAll('.brief-baseline')]
+  check('baseline tabulates characteristics', baselineRows.length > 3, `got ${baselineRows.length}`)
+  check('each baseline row carries both arms', baselineRows.every((r) => r.children.length === 3))
+  check(
+    'brief states it cannot show a guideline was changed',
+    document.body.textContent.includes('cannot show that this trial altered that guideline')
+  )
+  // Every trace tag must explain itself on hover; the tag is the only thing
+  // telling a reader whether an extract is byte-exact or reassembled.
+  const traceTags = [...document.querySelectorAll('.trace')]
+  check(
+    'every trace tag explains its provenance',
+    traceTags.length > 0 && traceTags.every((t) => (t.getAttribute('title') || '').length > 20)
+  )
+  check('brief notes quotation copyright', (document.querySelector('.brief-foot')?.textContent || '').includes('copyright'))
+
   window.document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
   await waitFor(() => !document.querySelector('.modal-backdrop'), 3000, 'modal closed')
   check('Escape dismisses the modal', !document.querySelector('.modal-backdrop'))
+
+  // A trial whose brief could not be extracted must say so explicitly. An empty
+  // brief panel would read as "nothing to report", which is a different claim.
+  console.log('\n[evidence brief · not extracted]')
+  window.location.hash = '#/trial/advor'
+  await waitFor(() => document.querySelector('.modal-backdrop')?.dataset.trialId === 'advor', 4000, 'advor modal')
+  await waitFor(() => document.querySelector('.brief-gap'), 6000, 'brief gap notice')
+  check('un-extracted trial states the gap', document.querySelector('.brief-gap').textContent.includes('No evidence brief was extracted'))
+  check('un-extracted trial renders no brief sections', document.querySelectorAll('.brief-section').length === 0)
+  check('un-extracted trial still shows its verified record', Boolean(document.querySelector('.kv')))
+  window.document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+  await waitFor(() => !document.querySelector('.modal-backdrop'), 3000, 'advor closed')
 
   // -------------------------------------------------------------- learn view
   console.log('\n[learn]')
