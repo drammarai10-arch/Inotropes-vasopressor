@@ -129,6 +129,25 @@ const dirLabel = (d) => state.labels.direction?.[d] ?? d;
 const accentFor = (d) =>
   d === 'benefit' ? 'var(--benefit)' : d === 'harm' ? 'var(--harm)' : 'var(--neutral)';
 
+/**
+ * CSS custom-property name for a domain, so a component can tint itself from
+ * one token instead of branching on seven values.
+ *
+ * The `data-domain` attribute is the only thing that sets --dom / --dom-soft
+ * (see the stylesheet), so styling a domain-aware element means putting this
+ * attribute on it or on an ancestor — never reading the colour into JS.
+ */
+const domainAttr = (domain) => (domain ? { 'data-domain': domain } : {});
+
+const domainLabel = (domain) => state.labels.domain?.[domain] ?? domain;
+
+/**
+ * The domain colour as a bare CSS value, for the few places that must colour a
+ * non-HTML surface (an SVG fill, a canvas stroke) where a `data-domain`
+ * ancestor cannot reach.
+ */
+const domainColor = (domain) => `var(--d-${String(domain || 'other').replace(/_/g, '-')})`;
+
 const csvCell = (v) => `"${String(v ?? '').replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
 
 function downloadCsv(filename, rows) {
@@ -284,10 +303,22 @@ function card(...children) {
   return h('section', { class: 'card' }, ...children);
 }
 
-function statBlock(label, value, sub) {
+/**
+ * A headline figure.
+ *
+ * `tone` tints the tile's rule and wash by WHAT THE NUMBER MEANS, so a row of
+ * six tiles reads as a dashboard rather than six identical boxes:
+ *   benefit  a favourable or complete figure
+ *   neutral  a caveat or a gap worth noticing
+ *   harm     a deficit
+ *   spectrum the trial count, whose rule previews the domain palette
+ * Omit `tone` for a plain accent tile. The tone is decoration on top of a
+ * complete text label — no meaning is carried by the colour alone.
+ */
+function statBlock(label, value, sub, tone) {
   return h(
     'div',
-    { class: 'stat' },
+    { class: 'stat', ...(tone ? { dataset: { tone } } : {}) },
     h('span', { class: 'stat-label', text: label }),
     h('span', { class: 'stat-value', text: value }),
     sub ? h('span', { class: 'stat-sub', text: sub }) : null
@@ -374,7 +405,7 @@ async function openTrial(id) {
       { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'modal-title' },
       h(
         'header',
-        { class: 'modal-head' },
+        { class: 'modal-head', ...domainAttr(trial.domain) },
         h(
           'div',
           null,
@@ -980,6 +1011,9 @@ function trialCard(t) {
     'article',
     {
       class: 'trial-card',
+      // data-domain tints the card surface (domain); data-dir colours the left
+      // rule (outcome direction). Two independent channels on one element.
+      ...domainAttr(t.domain),
       dataset: { dir: p.direction, id: t.id },
       role: 'button',
       tabindex: '0',
@@ -1010,7 +1044,7 @@ function trialCard(t) {
       'div',
       { class: 'tc-foot' },
       dirBadge(p.direction),
-      h('span', { class: 'tag', text: state.labels.domain?.[t.domain] ?? t.domain }),
+      h('span', { class: 'tag domain', text: state.labels.domain?.[t.domain] ?? t.domain }),
       t.n !== null && t.n !== undefined ? h('span', { class: 'tag mono', text: `n ${fmtInt(t.n)}` }) : null,
       t.plottable ? h('span', { class: 'tag verified', text: 'plottable' }) : null
     )
@@ -1246,12 +1280,12 @@ VIEWS.explore = async function renderExplore(params) {
     h(
       'div',
       { class: 'stat-grid' },
-      statBlock('Trials', fmtInt(m.unique_trials), `${fmtInt(m.source_documents_ingested)} documents ingested, ${m.duplicates_removed} duplicates removed`),
+      statBlock('Trials', fmtInt(m.unique_trials), `${fmtInt(m.source_documents_ingested)} documents ingested, ${m.duplicates_removed} duplicates removed`, 'spectrum'),
       statBlock('Participants', fmtInt(m.total_participants), `median ${fmtInt(median)} per trial`),
       statBlock('Publication span', `${m.years[0]}–${m.years[1]}`, `${first?.[0] ?? ''} → ${last?.[0] ?? ''}`),
-      statBlock('Favouring intervention', `${benefitShare}%`, `${m.by_direction.benefit} benefit · ${m.by_direction.neutral} neutral · ${m.by_direction.harm} harm`),
+      statBlock('Favouring intervention', `${benefitShare}%`, `${m.by_direction.benefit} benefit · ${m.by_direction.neutral} neutral · ${m.by_direction.harm} harm`, 'benefit'),
       statBlock('Plottable effects', fmtInt(m.plottable_effect_sizes), `${nonRatio} trials report a non-ratio endpoint`),
-      statBlock('Numeric fields unverified', String(m.unverified_fields), `across ${fmtInt(m.source_documents)} source documents`)
+      statBlock('Numeric fields unverified', String(m.unverified_fields), `across ${fmtInt(m.source_documents)} source documents`, m.unverified_fields === 0 ? 'benefit' : 'neutral')
     ),
     buildFiltersPanel(),
     h('div', { id: 'results' })
@@ -1328,7 +1362,15 @@ function forestPlot(rows) {
     if (t.domain !== lastDomain) {
       lastDomain = t.domain;
       const label = state.labels.domain?.[t.domain] ?? t.domain;
-      root.append(svg('text', { class: 'axis-label', x: 4, y: y - rowH + 14, text: label.toUpperCase(), 'font-weight': 700 }));
+      // A swatch of the domain's own hue heads each group, so the plot's bands
+      // and the header spectrum band are visibly the same code.
+      root.append(
+        svg('rect', {
+          x: 4, y: y - rowH + 4, width: 9, height: 9, rx: 2,
+          style: { fill: domainColor(t.domain) },
+        })
+      );
+      root.append(svg('text', { class: 'axis-label', x: 18, y: y - rowH + 14, text: label.toUpperCase(), 'font-weight': 700 }));
       root.append(
         svg('line', { class: 'gridline', x1: 4, x2: width - 6, y1: y - rowH + 20, y2: y - rowH + 20, 'stroke-dasharray': '3 3' })
       );
@@ -1634,7 +1676,7 @@ VIEWS.compare = async function renderCompare(params) {
         ...chosen.map((t) =>
           h(
             'th',
-            { scope: 'col' },
+            { scope: 'col', ...domainAttr(t.domain) },
             h('button', {
               class: 'remove',
               type: 'button',
@@ -1724,6 +1766,7 @@ VIEWS.timeline = async function renderTimeline(params) {
         'button',
         {
           class: 'bar-row',
+          ...domainAttr(d.domain),
           type: 'button',
           'aria-pressed': String(tl.domain === d.domain),
           onClick: () => setHash({ period: tl.period, domain: tl.domain === d.domain ? null : d.domain }),
@@ -1785,6 +1828,7 @@ VIEWS.timeline = async function renderTimeline(params) {
               'a',
               {
                 class: 'tl-item',
+                ...domainAttr(t.domain),
                 href: `#/trial/${t.id}`,
                 dataset: { dir: t.direction },
               },
@@ -2638,7 +2682,7 @@ VIEWS.about = async function renderAbout() {
         ...domains.map((d) =>
           h(
             'div',
-            { class: 'bar-row', style: { cursor: 'default' } },
+            { class: 'bar-row', ...domainAttr(d.domain), style: { cursor: 'default' } },
             h('span', { class: 'bar-label', text: d.label }),
             h('span', { class: 'bar-track' }, h('span', { class: 'bar-fill', style: { width: `${(d.trials / Math.max(...domains.map((x) => x.trials))) * 100}%` } })),
             h('span', { class: 'bar-val', text: String(d.trials) })
@@ -2672,9 +2716,9 @@ VIEWS.about = async function renderAbout() {
         ...Object.entries(directions).map(([k, v]) =>
           h(
             'div',
-            { class: 'bar-row', style: { cursor: 'default' } },
+            { class: 'bar-row', dataset: { dir: k }, style: { cursor: 'default' } },
             h('span', { class: 'bar-label', text: state.labels.direction[k] ?? k }),
-            h('span', { class: 'bar-track' }, h('span', { class: 'bar-fill', style: { width: `${(v / maxDirection) * 100}%`, background: accentFor(k) } })),
+            h('span', { class: 'bar-track' }, h('span', { class: 'bar-fill', style: { width: `${(v / maxDirection) * 100}%` } })),
             h('span', { class: 'bar-val', text: String(v) })
           )
         )

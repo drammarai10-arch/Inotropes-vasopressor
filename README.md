@@ -219,13 +219,35 @@ connection string and no runtime configuration. The dataset is public evidence d
 ### Tests
 
 ```bash
-node test/smoke.mjs     # 39 assertions across all six views (needs the server running)
+node test/smoke.mjs     # 97 assertions across all six views (needs the server running)
+node test/design.mjs    # 138 assertions on the stylesheet (no server needed)
 ```
 
-The harness loads the real server shell in jsdom, executes the production
+`smoke.mjs` loads the real server shell in jsdom, executes the production
 `public/static/app.js` against the live API, and drives filtering, the forest plot,
 comparison, timeline, quiz answering, the trial modal, theme persistence, route
 fallback and the interactive-element contract.
+
+`design.mjs` is the stylesheet's own gate. Because colour here *encodes meaning* — a
+hue names a clinical domain, a direction hue names a result — a missing token or an
+unreadable pair is a correctness bug, not a cosmetic one. It parses both theme token
+blocks and separately asserts:
+
+- every `var()` reference resolves to a declared token
+- every foreground/background pair the interface actually renders clears the WCAG AA
+  ratio for its role — 4.5:1 for text, 3:1 for borders, focus rings and graphics
+- **the ramp stops too.** The brand mark and primary button paint `--on-accent` over a
+  three-stop gradient, so all three stops are checked, not just `--accent`
+- borders are checked against the **darkest ground they are drawn on** (a domain card
+  tint), not just `--surface`
+- the seven domain hues are perceptually separable, measured as **CIE Lab ΔE ≥ 20**
+
+That last point is a deliberate correction. An earlier version of this test compared
+domain hues with a *contrast ratio* and demanded 1.25:1. Contrast measures luminance, so
+two saturated hues of similar lightness — a hot pink and a deep violet — legitimately
+score ≈1.0 against each other, and a healthy, clearly-distinct palette was reported as
+18 failures. Contrast answers "can I read this?"; ΔE answers "are these two colours
+different?". Using the wrong one produced false failures, which is worse than no test.
 
 ## Tech stack
 

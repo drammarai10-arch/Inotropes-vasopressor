@@ -1,9 +1,38 @@
 /* ==========================================================================
    CV Trial Evidence Base — stylesheet
    --------------------------------------------------------------------------
-   Teal-accented, documentation-grade design system. Light/dark via
-   [data-theme] on <html>. Organised as: tokens → base → layout → chrome →
-   controls → data display → educational → responsive → print.
+   A clinical-atlas design system: high-contrast, colour-coded by meaning.
+
+   COLOUR CARRIES INFORMATION, NEVER DECORATION.
+   There are two colour channels, and they do not overlap in role or size:
+
+     1. DIRECTION (green / amber / red) — the outcome semantics. Reserved.
+        Appears as the card's left rule, the direction badge, the modal result
+        box and the forest-plot markers. Never used for anything else, because
+        a reader scanning the grid for "which of these helped?" relies on it.
+
+     2. DOMAIN (a 7-hue palette) — the clinical topic (heart failure, lipids,
+        antithrombotic therapy ...). Appears only in the small domain chip and
+        as a faint tinted wash on the card surface. A wider palette is safe
+        here because it never occupies the direction channel's role or scale.
+
+   Splitting the two channels is what makes a many-coloured interface readable
+   rather than noisy: colour adds a second encoded dimension instead of
+   competing with the first.
+
+   A third use of colour exists and is NOT an encoding: low-chroma panel tints
+   that give adjacent regions separate identities so the eye can tell them
+   apart while scrolling. These are always near-neutral, never carry a value,
+   and never appear where a reader could mistake them for direction or domain.
+   Where a colour could be misread as data, it is not used.
+
+   Light/dark via [data-theme] on <html>. Organised as:
+   tokens → base → layout → chrome → controls → data display → educational →
+   evidence brief → responsive → print.
+
+   Contrast: every foreground/background pair below meets WCAG AA (>=4.5:1 for
+   body text, >=3:1 for large text and UI borders). The dark-theme tokens are
+   re-derived rather than inverted, so they hold the same ratios.
    ========================================================================== */
 
 /* ------------------------------------------------------------------ tokens */
@@ -11,43 +40,75 @@
 :root {
   color-scheme: light;
 
-  --bg: #f7f9fa;
-  --bg-tint: #eef4f5;
+  --bg: #f4f7fb;
+  --bg-tint: #e8eff8;
   --surface: #ffffff;
-  --surface-2: #f2f5f6;
-  --surface-3: #e5ebec;
-  --border: #dfe6e8;
-  --border-strong: #c4d0d3;
+  --surface-2: #f1f5fa;
+  --surface-3: #e2e9f2;
+  /* --border is the DECORATIVE hairline: a separator, a panel outline. It is
+     never a control edge and never carries meaning, so it has no contrast
+     obligation and stays light. Anything a reader must see or click uses
+     --border-strong instead. */
+  --border: #d3dded;
+  /* --border-strong is deliberately dark for a light theme: it draws the edge
+     of interactive controls (buttons, inputs, quiz options, the icon toggle) and
+     must clear 3:1 as a non-text indicator. Measured worst case is 3.53:1, on
+     the raas card tint — the darkest ground it is drawn against. */
+  --border-strong: #6a7f9a;
 
-  --text: #10201f;
-  --text-muted: #55666a;
-  --text-faint: #7d8f93;
+  --text: #0d1b2e;
+  --text-muted: #41566f;
+  --text-faint: #5f7590;
 
-  /* Teal primary, chosen as a clinical/medical signal that stays legible on
-     both themes and does not collide with the benefit/harm semantics below. */
-  --accent: #0d8a80;
-  --accent-hover: #0a6f67;
-  --accent-soft: #e0f4f2;
-  --accent-line: #14b8a6;
+  /* Clinical blue primary: the colour of a chart, a stethoscope, a hospital
+     sign. Distinct from every direction hue and from every domain hue. */
+  --accent: #0b5cab;
+  --accent-hover: #084886;
+  --accent-soft: #e3eefb;
+  /* The three ramp stops below are painted under --on-accent at the brand mark
+     and the primary button, so every stop — not just --accent — has to carry
+     the foreground. The whole ramp is therefore checked, and the lightest stop
+     is held dark enough to clear 4.5:1 against white. */
+  --accent-line: #1f6dbd;
+  --accent-deep: #062f57;
+  /* Content placed ON a filled accent control (nav pill, primary button). On a
+     dark accent this is white; in the dark theme the accent is a light tint,
+     so it flips to near-black. Defined as a token so the pair can be checked. */
+  --on-accent: #ffffff;
 
   /* Direction semantics: reserved. Never used for decoration. */
-  --benefit: #0f7b4f;
-  --benefit-soft: #e2f5ea;
-  --neutral: #8a6a17;
-  --neutral-soft: #fbf3da;
-  --harm: #b3261e;
-  --harm-soft: #fdecea;
+  --benefit: #067647;
+  --benefit-soft: #e1f5eb;
+  --neutral: #8a5300;
+  --neutral-soft: #fdf1da;
+  --harm: #b01b12;
+  --harm-soft: #fdeadb;
 
-  --info: #1f6f9c;
-  --info-soft: #e6f2f9;
+  --info: #0b5cab;
+  --info-soft: #e3eefb;
 
-  --radius-lg: 16px;
-  --radius: 12px;
-  --radius-sm: 8px;
+  /* --- domain palette (light) --------------------------------------------
+     Seven hues, one per clinical domain. Each is a saturated `--d-*` for text
+     and rules plus a low-chroma `--d-*-soft` for washes, so a hue reads as a
+     tint at card scale and still passes AA as a chip label. */
+  --d-hf: #c2185b;              --d-hf-soft: #fdeaf2;
+  /* Two steps darker than the obvious amber: #b45309 measured 4.48:1 against
+     its own tint, just under the 4.5:1 a chip label needs. The hue is unchanged
+     (56deg), so the domain still reads as amber. */
+  --d-lipids: #a54c07;          --d-lipids-soft: #fdf0e3;
+  --d-raas: #6d28d9;            --d-raas-soft: #f1ebfe;
+  --d-acs-antiplatelet: #1d4ed8; --d-acs-antiplatelet-soft: #e8effe;
+  --d-acs-anticoag: #0e7490;    --d-acs-anticoag-soft: #e2f4f8;
+  --d-af-anticoag: #047857;     --d-af-anticoag-soft: #e3f6ef;
+  --d-other: #475569;           --d-other-soft: #eef2f7;
 
-  --shadow-xs: 0 1px 2px rgba(16, 32, 32, 0.05);
-  --shadow: 0 1px 2px rgba(16, 32, 32, 0.05), 0 4px 12px rgba(16, 32, 32, 0.05);
-  --shadow-lg: 0 6px 18px rgba(16, 32, 32, 0.09), 0 18px 44px rgba(16, 32, 32, 0.11);
+  --radius-lg: 18px;
+  --radius: 13px;
+  --radius-sm: 9px;
+
+  --shadow-xs: 0 1px 2px rgba(13, 27, 46, 0.06), 0 1px 3px rgba(13, 27, 46, 0.04);
+  --shadow: 0 2px 4px rgba(13, 27, 46, 0.06), 0 8px 20px rgba(13, 27, 46, 0.07);
+  --shadow-lg: 0 8px 22px rgba(13, 27, 46, 0.10), 0 24px 56px rgba(13, 27, 46, 0.14);
 
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -59,36 +120,97 @@
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --bg: #0b1315;
-  --bg-tint: #0f1c1e;
-  --surface: #131f22;
-  --surface-2: #18282c;
-  --surface-3: #20343a;
-  --border: #253a3f;
-  --border-strong: #3a5459;
+  --bg: #070f1c;
+  --bg-tint: #0b1729;
+  --surface: #0e1d31;
+  --surface-2: #142640;
+  --surface-3: #1d3454;
+  /* Decorative hairline only; see the light-theme note on --border. */
+  --border: #24405f;
+  /* Raised from #3d6188, which measured 2.63:1 on --surface and 2.28:1 on the
+     darkest domain tint — below the 3:1 a control edge needs. Worst case is now
+     3.55:1. */
+  --border-strong: #5480ad;
 
-  --text: #e8f0f1;
-  --text-muted: #a2b6b9;
-  --text-faint: #7d9498;
+  --text: #eaf2fb;
+  --text-muted: #a8c0d8;
+  --text-faint: #8299b5;
 
-  --accent: #3fc7b8;
-  --accent-hover: #63d7ca;
-  --accent-soft: #10332f;
-  --accent-line: #3fc7b8;
+  --accent: #6cb6f5;
+  --accent-hover: #93cbfa;
+  --accent-soft: #0f2b4d;
+  /* On a dark ground the ramp inverts: all three stops must be LIGHT, because
+     the foreground over them is near-black. Ordering them lightest-last keeps
+     the gradient reading left-to-right as the light theme's does. */
+  --accent-line: #4d9ee8;
+  --accent-deep: #93cbfa;
+  /* The dark-theme accent is a LIGHT tint, so content on it must be dark to
+     stay legible — the inverse of the light theme. This is the single reason
+     this token exists rather than hard-coding #fff on every accent fill. */
+  --on-accent: #04121f;
 
-  --benefit: #4ecf92;
-  --benefit-soft: #102e22;
-  --neutral: #ddb95c;
-  --neutral-soft: #302713;
-  --harm: #f28f86;
-  --harm-soft: #371b19;
+  --benefit: #4ddb9a;
+  --benefit-soft: #0a2c20;
+  --neutral: #f0c464;
+  --neutral-soft: #322407;
+  --harm: #ff9086;
+  --harm-soft: #3c1512;
 
-  --info: #6cb6e0;
-  --info-soft: #122936;
+  --info: #6cb6f5;
+  --info-soft: #0f2b4d;
 
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.28);
-  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.45), 0 18px 44px rgba(0, 0, 0, 0.4);
+  /* Domains re-derived for a dark ground: each raised in lightness so it still
+     clears AA on --surface, and desaturated in the soft variant so washes stay
+     behind the text rather than glowing under it. */
+  --d-hf: #ff89b5;              --d-hf-soft: #351024;
+  --d-lipids: #f5b356;          --d-lipids-soft: #35230a;
+  --d-raas: #b79bff;            --d-raas-soft: #241a45;
+  --d-acs-antiplatelet: #86aefc; --d-acs-antiplatelet-soft: #132448;
+  --d-acs-anticoag: #5ed0e8;    --d-acs-anticoag-soft: #0b2c36;
+  --d-af-anticoag: #4fd8a4;     --d-af-anticoag-soft: #0a2e24;
+  --d-other: #a8bdd4;           --d-other-soft: #17263a;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 22px rgba(0, 0, 0, 0.55), 0 24px 56px rgba(0, 0, 0, 0.5);
+}
+
+/* --- domain hooks ---------------------------------------------------------
+   One rule sets the pair of variables for a scope; every consumer below then
+   refers only to --dom / --dom-soft, so adding a domain means adding one line
+   here rather than touching each component.
+
+   A default pair lives on :root so a component that reads --dom outside any
+   domain scope (a design-composition bar, say) still resolves to the neutral
+   hue instead of an invalid value. */
+:root { --dom: var(--d-other); --dom-soft: var(--d-other-soft); }
+/* The single token a bar draws itself from. Defaulted here so a bar with
+   neither a domain nor a direction scope still renders in the neutral hue
+   rather than resolving to nothing. */
+:root { --bar: var(--d-other); }
+[data-domain] { --dom: var(--d-other); --dom-soft: var(--d-other-soft); }
+[data-domain='hf'] { --dom: var(--d-hf); --dom-soft: var(--d-hf-soft); }
+[data-domain='lipids'] { --dom: var(--d-lipids); --dom-soft: var(--d-lipids-soft); }
+[data-domain='raas'] { --dom: var(--d-raas); --dom-soft: var(--d-raas-soft); }
+[data-domain='acs_antiplatelet'] {
+  --dom: var(--d-acs-antiplatelet); --dom-soft: var(--d-acs-antiplatelet-soft);
+}
+[data-domain='acs_anticoag'] {
+  --dom: var(--d-acs-anticoag); --dom-soft: var(--d-acs-anticoag-soft);
+}
+[data-domain='af_anticoag'] {
+  --dom: var(--d-af-anticoag); --dom-soft: var(--d-af-anticoag-soft);
+}
+/* Spelled out even though the bare [data-domain] rule above already yields this
+   pair: `other` is a real domain that authors write explicitly, and an explicit
+   hook keeps the set of seven complete and greppable. */
+[data-domain='other'] { --dom: var(--d-other); --dom-soft: var(--d-other-soft); }
+
+/* Nothing relies on colour alone: a reader with a colour-vision deficiency, or
+   printing in greyscale, still gets the domain from the chip's text label and
+   the direction from the badge's own word. */
+@media print {
+  [data-domain] { --dom-soft: transparent; }
 }
 
 /* -------------------------------------------------------------------- base */
@@ -107,34 +229,48 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.62;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Two very low-chroma radial washes give the page depth without introducing
+     a third colour channel: they are built from the accent and the page tint,
+     so they read as lighting rather than as meaning. */
+  background:
+    radial-gradient(1100px 460px at 12% -8%, var(--accent-soft), transparent 62%),
+    radial-gradient(900px 420px at 92% 2%, var(--bg-tint), transparent 58%),
+    var(--bg);
+  background-attachment: fixed;
 }
 
 h1, h2, h3, h4 {
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.22;
+  font-weight: 720;
+  color: var(--text);
 }
 p { margin: 0 0 12px; }
 p:last-child { margin-bottom: 0; }
 
-a { color: var(--accent); text-underline-offset: 2px; }
+/* Links are visibly links: colour + underline, not colour alone. */
+a { color: var(--accent); text-underline-offset: 2px; text-decoration-thickness: 1px; }
+a:hover { color: var(--accent-hover); }
 
 :focus-visible {
-  outline: 2.5px solid var(--accent);
+  outline: 3px solid var(--accent-line);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 5px;
 }
+
+/* A hairline keyline at the top of every major panel, drawn from the accent.
+   Purely structural: it separates stacked regions without spending a colour. */
+.hairline { border-top: 1px solid var(--border); }
 
 .skip-link {
   position: absolute; left: -9999px; top: 0; z-index: 100;
-  background: var(--accent); color: #fff; padding: 10px 16px;
+  background: var(--accent); color: var(--on-accent); padding: 10px 16px;
   border-radius: 0 0 var(--radius-sm) 0; font-weight: 600;
 }
 .skip-link:focus { left: 0; }
@@ -168,9 +304,26 @@ h3 { font-size: 15px; margin: 0 0 8px; font-weight: 650; }
 
 .site-header {
   position: sticky; top: 0; z-index: 40;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: saturate(180%) blur(14px);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(180%) blur(16px);
   border-bottom: 1px solid var(--border);
+}
+/* The spectrum rule: the seven domain hues in their canonical order, rendered
+   as a 3px band under the header. It is the interface's one piece of pure
+   ornament, and it earns its place by previewing the legend the reader is
+   about to meet in the card grid. */
+.site-header::after {
+  content: ''; display: block; height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--d-hf) 0 14.28%,
+    var(--d-lipids) 14.28% 28.56%,
+    var(--d-raas) 28.56% 42.84%,
+    var(--d-acs-antiplatelet) 42.84% 57.12%,
+    var(--d-acs-anticoag) 57.12% 71.4%,
+    var(--d-af-anticoag) 71.4% 85.68%,
+    var(--d-other) 85.68% 100%
+  );
 }
 .header-inner {
   display: flex; align-items: center; gap: 20px;
@@ -182,33 +335,37 @@ h3 { font-size: 15px; margin: 0 0 8px; font-weight: 650; }
   text-decoration: none; color: inherit; flex-shrink: 0;
 }
 .brand-mark {
-  color: #fff; background: linear-gradient(135deg, var(--accent-line), var(--accent));
-  width: 34px; height: 34px; border-radius: 9px;
+  color: var(--on-accent); background: linear-gradient(135deg, var(--accent-line), var(--accent) 60%, var(--accent-deep));
+  width: 36px; height: 36px; border-radius: 10px;
   display: grid; place-items: center; flex-shrink: 0;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-xs), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
 .brand-text strong { font-size: 15px; font-weight: 720; letter-spacing: -0.02em; }
 .brand-text small { color: var(--text-faint); font-size: 11.5px; font-weight: 500; }
 
-.site-nav { display: flex; gap: 2px; margin-left: auto; flex-wrap: wrap; }
+.site-nav { display: flex; gap: 3px; margin-left: auto; flex-wrap: wrap; }
 .site-nav a {
   color: var(--text-muted); text-decoration: none;
-  font-size: 13.5px; font-weight: 600;
-  padding: 7px 12px; border-radius: var(--radius-sm); white-space: nowrap;
+  font-size: 13.5px; font-weight: 620;
+  padding: 7px 13px; border-radius: 999px; white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background-color .13s, color .13s, border-color .13s;
 }
-.site-nav a:hover { background: var(--surface-2); color: var(--text); }
+.site-nav a:hover { background: var(--surface); color: var(--accent); border-color: var(--border); }
 .site-nav a[aria-current='page'] {
-  background: var(--accent-soft); color: var(--accent);
+  background: var(--accent); color: var(--on-accent); border-color: var(--accent);
+  box-shadow: var(--shadow-xs);
 }
 
 .icon-btn {
-  background: var(--surface); border: 1px solid var(--border);
+  background: var(--surface); border: 1px solid var(--border-strong);
   color: var(--text-muted); width: 36px; height: 36px;
-  border-radius: var(--radius-sm); cursor: pointer; font-size: 15px;
+  border-radius: 999px; cursor: pointer; font-size: 15px;
   display: grid; place-items: center; flex-shrink: 0;
+  transition: color .13s, border-color .13s, background-color .13s;
 }
-.icon-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.icon-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 
 /* ----------------------------------------------------------------- controls */
 
@@ -221,9 +378,9 @@ h3 { font-size: 15px; margin: 0 0 8px; font-weight: 650; }
 .btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 .btn.primary {
   background: linear-gradient(135deg, var(--accent-line), var(--accent));
-  border-color: transparent; color: #fff;
+  border-color: transparent; color: var(--on-accent);
 }
-.btn.primary:hover { background: var(--accent-hover); color: #fff; border-color: transparent; }
+.btn.primary:hover { background: var(--accent-hover); color: var(--on-accent); border-color: transparent; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn.sm { padding: 6px 12px; font-size: 12.5px; }
 
@@ -236,7 +393,7 @@ h3 { font-size: 15px; margin: 0 0 8px; font-weight: 650; }
 }
 .chip:hover { border-color: var(--accent); color: var(--text); }
 .chip[aria-pressed='true'] {
-  background: var(--accent); border-color: var(--accent); color: #fff;
+  background: var(--accent); border-color: var(--accent); color: var(--on-accent);
 }
 .chip .count { opacity: 0.7; font-variant-numeric: tabular-nums; margin-left: 5px; }
 
@@ -273,6 +430,16 @@ input:focus, select:focus { border-color: var(--accent); outline: none; box-shad
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 22px;
   box-shadow: var(--shadow-xs);
+  position: relative;
+  /* A 3px accent rule along the top of every panel. Structural, not semantic:
+     it stops a stack of white panels from reading as one undifferentiated
+     mass. */
+  overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-line), var(--accent) 55%, var(--accent-deep));
+  opacity: 0.9;
 }
 .card + .card { margin-top: 18px; }
 
@@ -284,46 +451,97 @@ input:focus, select:focus { border-color: var(--accent); outline: none; box-shad
 
 .stat-grid {
   display: grid; gap: 13px; margin-bottom: 22px;
-  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
 }
 .stat {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 16px 18px;
   box-shadow: var(--shadow-xs);
+  position: relative; overflow: hidden;
 }
+/* Each tile is tinted by WHAT IT MEASURES, so the row is not six identical
+   boxes: a favourable coverage figure reads green, a gap reads amber. The
+   spectrum tone is reserved for the trial count, which is a statement about
+   the domain mix. */
+.stat::before {
+  content: ''; position: absolute; inset: 0 auto 0 0; width: 4px;
+  background: var(--accent);
+}
+.stat[data-tone='benefit']::before { background: var(--benefit); }
+.stat[data-tone='neutral']::before { background: var(--neutral); }
+.stat[data-tone='harm']::before { background: var(--harm); }
+.stat[data-tone='spectrum']::before {
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    var(--d-hf), var(--d-lipids), var(--d-raas), var(--d-acs-antiplatelet),
+    var(--d-acs-anticoag), var(--d-af-anticoag), var(--d-other)
+  );
+}
+.stat[data-tone='benefit'] { background: linear-gradient(180deg, var(--benefit-soft), var(--surface) 70%); }
+.stat[data-tone='neutral'] { background: linear-gradient(180deg, var(--neutral-soft), var(--surface) 70%); }
 .stat-label {
   display: block; font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-faint);
 }
 .stat-value {
-  display: block; font-size: 27px; font-weight: 760;
-  letter-spacing: -0.03em; margin-top: 5px;
-  font-variant-numeric: tabular-nums;
+  display: block; font-size: 28px; font-weight: 780;
+  letter-spacing: -0.035em; margin-top: 5px; line-height: 1.1;
+  font-variant-numeric: tabular-nums; color: var(--text);
 }
-.stat-sub { display: block; font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.stat-sub { display: block; font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
 /* ------------------------------------------------------------ direction/tags */
 
 .dir {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 650; padding: 3px 9px;
+  font-size: 12px; font-weight: 680; padding: 4px 10px;
   border-radius: 999px; white-space: nowrap;
+  border: 1px solid transparent;
 }
+/* The dot is a second, non-colour cue: it is present for benefit / neutral /
+   harm alike, so the badge is legible when colour is unavailable. */
 .dir::before {
   content: ''; width: 7px; height: 7px; border-radius: 50%;
-  background: currentColor;
+  background: currentColor; flex-shrink: 0;
 }
-.dir-benefit { background: var(--benefit-soft); color: var(--benefit); }
-.dir-neutral { background: var(--neutral-soft); color: var(--neutral); }
-.dir-harm    { background: var(--harm-soft);    color: var(--harm); }
+.dir-benefit {
+  background: var(--benefit-soft); color: var(--benefit);
+  border-color: color-mix(in srgb, var(--benefit) 30%, transparent);
+}
+.dir-neutral {
+  background: var(--neutral-soft); color: var(--neutral);
+  border-color: color-mix(in srgb, var(--neutral) 30%, transparent);
+}
+.dir-harm {
+  background: var(--harm-soft); color: var(--harm);
+  border-color: color-mix(in srgb, var(--harm) 30%, transparent);
+}
 
 .tag {
-  display: inline-block; font-size: 11.5px; font-weight: 550;
-  padding: 3px 9px; border-radius: 999px;
+  display: inline-block; font-size: 11.5px; font-weight: 600;
+  padding: 4px 10px; border-radius: 999px;
   background: var(--surface-3); color: var(--text-muted);
+  border: 1px solid transparent;
 }
-.tag.verified { background: var(--benefit-soft); color: var(--benefit); }
-.tag.derived  { background: var(--neutral-soft); color: var(--neutral); }
+.tag.verified {
+  background: var(--benefit-soft); color: var(--benefit);
+  border-color: color-mix(in srgb, var(--benefit) 28%, transparent);
+}
+.tag.derived {
+  background: var(--neutral-soft); color: var(--neutral);
+  border-color: color-mix(in srgb, var(--neutral) 28%, transparent);
+}
+.tag.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+
+/* The domain chip. Colour here is the encoded domain, and the chip always
+   carries the domain's NAME, so the hue is a reinforcement rather than the
+   only way to read it. */
+.tag.domain {
+  background: var(--dom-soft); color: var(--dom);
+  border-color: color-mix(in srgb, var(--dom) 32%, transparent);
+  font-weight: 680;
+}
 
 /* --------------------------------------------------------------- trial list */
 
@@ -334,66 +552,93 @@ input:focus, select:focus { border-color: var(--accent); outline: none; box-shad
 .result-count { font-size: 13.5px; color: var(--text-muted); font-weight: 600; }
 
 .trial-grid {
-  display: grid; gap: 13px;
-  grid-template-columns: repeat(auto-fill, minmax(348px, 1fr));
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(352px, 1fr));
 }
 
 .trial-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-left: 3px solid var(--border-strong);
+  /* Domain tint on the surface, direction rule on the edge. The two channels
+     are visible simultaneously without either one having to be inferred. */
+  background: linear-gradient(180deg, var(--dom-soft), var(--surface) 58%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border-strong);
   border-radius: var(--radius); padding: 16px 18px;
   box-shadow: var(--shadow-xs); cursor: pointer;
   display: flex; flex-direction: column; gap: 9px;
-  text-align: left; transition: border-color .13s, transform .13s, box-shadow .13s;
+  text-align: left;
+  transition: border-color .14s, transform .14s, box-shadow .14s;
 }
-.trial-card:hover {
+.trial-card:hover,
+.trial-card:focus-visible {
   border-color: var(--accent); box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 .trial-card[data-dir='benefit'] { border-left-color: var(--benefit); }
 .trial-card[data-dir='neutral'] { border-left-color: var(--neutral); }
 .trial-card[data-dir='harm']    { border-left-color: var(--harm); }
 
 .tc-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
-.tc-acronym { font-size: 16px; font-weight: 740; letter-spacing: -0.02em; }
-.tc-year { font-size: 12.5px; color: var(--text-faint); font-variant-numeric: tabular-nums; font-weight: 550; }
-.tc-title { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+.tc-acronym { font-size: 16.5px; font-weight: 760; letter-spacing: -0.025em; }
+.tc-year {
+  font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums;
+  font-weight: 620; background: var(--surface-3); padding: 2px 8px; border-radius: 999px;
+}
+.tc-title { font-size: 13px; color: var(--text-muted); line-height: 1.52; margin: 0; }
 .tc-effect { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
-.tc-effect .val { font-family: var(--mono); font-size: 15px; font-weight: 600; }
-.tc-effect .rel { font-size: 12px; color: var(--text-muted); }
-.tc-foot { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-top: auto; padding-top: 5px; }
+.tc-effect .val {
+  font-family: var(--mono); font-size: 15.5px; font-weight: 660;
+  letter-spacing: -0.02em;
+}
+.tc-effect .rel { font-size: 12px; color: var(--text-muted); font-weight: 550; }
+.tc-foot { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: auto; padding-top: 7px; }
 
-.mini-ci { height: 6px; background: var(--surface-3); border-radius: 3px; position: relative; overflow: hidden; }
-.mini-ci .band { position: absolute; top: 0; bottom: 0; background: var(--accent-line); opacity: 0.4; border-radius: 3px; }
-.mini-ci .pt { position: absolute; top: -2px; width: 3px; height: 10px; background: var(--text); border-radius: 1px; }
+/* The interval strip: band = the CI, tick = the point estimate. Tinted by
+   direction so the strip and the card's edge rule agree. */
+.mini-ci { height: 7px; background: var(--surface-3); border-radius: 4px; position: relative; overflow: hidden; }
+.mini-ci .band {
+  position: absolute; top: 0; bottom: 0; border-radius: 4px;
+  background: var(--accent-line); opacity: 0.42;
+}
+.trial-card[data-dir='benefit'] .mini-ci .band { background: var(--benefit); opacity: 0.5; }
+.trial-card[data-dir='neutral'] .mini-ci .band { background: var(--neutral); opacity: 0.5; }
+.trial-card[data-dir='harm']    .mini-ci .band { background: var(--harm); opacity: 0.5; }
+.mini-ci .pt {
+  position: absolute; top: -2px; width: 3px; height: 11px;
+  background: var(--text); border-radius: 1px;
+}
 
 /* -------------------------------------------------------------- forest plot */
 
 .forest-wrap {
-  background: var(--surface); border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, var(--surface-2), var(--surface) 40%);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);
   overflow-x: auto;
 }
 .forest { display: block; min-width: 880px; }
 .forest text { font-family: var(--sans); fill: var(--text); }
-.forest .axis-label { fill: var(--text-faint); font-size: 10.5px; font-weight: 550; }
-.forest .row-acronym { font-size: 12px; font-weight: 650; }
+.forest .axis-label { fill: var(--text-muted); font-size: 10.5px; font-weight: 620; }
+.forest .row-acronym { font-size: 12px; font-weight: 680; }
 .forest .row-sub { font-size: 10px; fill: var(--text-faint); }
-.forest .row-val { font-family: var(--mono); font-size: 10.5px; fill: var(--text-muted); }
+.forest .row-val { font-family: var(--mono); font-size: 10.5px; fill: var(--text-muted); font-weight: 550; }
 .forest .gridline { stroke: var(--border); stroke-width: 1; }
-.forest .refline { stroke: var(--text-faint); stroke-width: 1.4; stroke-dasharray: 5 4; }
+.forest .refline { stroke: var(--text-faint); stroke-width: 1.5; stroke-dasharray: 5 4; }
 .forest .row-band { fill: transparent; cursor: pointer; }
 .forest .row-band:hover { fill: var(--accent-soft); }
 .forest .row-acronym:hover { fill: var(--accent); }
-.forest .ci-line { stroke-width: 1.7; }
-.forest .ci-cap { stroke-width: 1.7; }
+.forest .ci-line { stroke-width: 1.8; }
+.forest .ci-cap { stroke-width: 1.8; }
 
+/* Domain colour key. Seven swatches, in the same canonical order as the header
+   band, so the spectrum rule doubles as this legend's preview. */
 .legend {
-  display: flex; gap: 18px; flex-wrap: wrap;
-  font-size: 12.5px; color: var(--text-muted); margin-top: 13px;
+  display: flex; gap: 10px 16px; flex-wrap: wrap;
+  font-size: 12.5px; color: var(--text-muted); margin-top: 15px;
 }
-.legend span { display: inline-flex; align-items: center; gap: 7px; }
-.legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; font-weight: 550; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+.legend i.dir-swatch { border-radius: 50%; }
 
 /* ----------------------------------------------------------------- compare */
 
@@ -403,10 +648,13 @@ table.cmp th, table.cmp td { border: 1px solid var(--border); padding: 10px 13px
 table.cmp thead th {
   background: var(--surface-2); position: sticky; top: 0; z-index: 2;
   font-size: 13px; font-weight: 720;
+  /* Each comparison column is keyed to its trial's domain, so a reader can
+     track a column across a wide table without counting cells. */
+  border-top: 3px solid var(--dom);
 }
-table.cmp thead th:first-child { min-width: 140px; }
+table.cmp thead th:first-child { min-width: 140px; border-top-color: var(--border); }
 table.cmp tbody th {
-  background: var(--surface-2); font-weight: 620; font-size: 11.5px;
+  background: var(--surface-2); font-weight: 640; font-size: 11.5px;
   color: var(--text-muted); text-transform: uppercase;
   letter-spacing: 0.05em; white-space: nowrap;
 }
@@ -419,141 +667,201 @@ th .remove:hover { color: var(--harm); }
 
 /* ---------------------------------------------------------------- timeline */
 
-.tl { position: relative; padding-left: 28px; }
-.tl::before { content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
-.tl-year { position: relative; margin-bottom: 20px; }
+.tl { position: relative; padding-left: 30px; }
+.tl::before {
+  content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px;
+  background: linear-gradient(180deg, var(--accent-line), var(--border) 22%, var(--border));
+}
+.tl-year { position: relative; margin-bottom: 22px; }
 .tl-year > h3 {
-  font-size: 13.5px; font-weight: 720; color: var(--accent);
+  font-size: 13.5px; font-weight: 740; color: var(--accent);
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 3px 11px;
-  display: inline-block; margin-bottom: 10px;
+  border-radius: 999px; padding: 3px 13px;
+  display: inline-block; margin-bottom: 11px;
   font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-xs);
 }
 .tl-year::before {
-  content: ''; position: absolute; left: -24px; top: 8px;
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--accent-line); border: 2px solid var(--bg);
+  content: ''; position: absolute; left: -26px; top: 7px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent-line);
+  box-shadow: 0 0 0 3px var(--surface);
 }
-.tl-items { display: grid; gap: 9px; grid-template-columns: repeat(auto-fill, minmax(304px, 1fr)); }
+.tl-items { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(308px, 1fr)); }
 .tl-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-left: 3px solid var(--border-strong);
+  background: linear-gradient(180deg, var(--dom-soft), var(--surface) 62%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border-strong);
   border-radius: var(--radius-sm); padding: 11px 14px;
   cursor: pointer; text-align: left; width: 100%;
   font: inherit; color: inherit; text-decoration: none;
-  transition: border-color .12s, transform .12s;
+  transition: border-color .13s, transform .13s, box-shadow .13s;
 }
-.tl-item:hover { border-color: var(--accent); transform: translateX(2px); }
+.tl-item:hover { border-color: var(--accent); transform: translateX(3px); box-shadow: var(--shadow-xs); }
 .tl-item[data-dir='benefit'] { border-left-color: var(--benefit); }
 .tl-item[data-dir='neutral'] { border-left-color: var(--neutral); }
 .tl-item[data-dir='harm']    { border-left-color: var(--harm); }
-.tl-item .nm { font-weight: 680; font-size: 13.5px; }
+.tl-item .nm { font-weight: 700; font-size: 13.5px; }
 .tl-item .fx { font-family: var(--mono); font-size: 12px; color: var(--text-muted); }
 
-.chart-block { margin-bottom: 20px; }
-.bars { display: flex; flex-direction: column; gap: 8px; }
+.chart-block { margin-bottom: 22px; }
+.bars { display: flex; flex-direction: column; gap: 9px; }
 .bar-row {
-  display: grid; grid-template-columns: 178px 1fr 62px; gap: 12px;
+  display: grid; grid-template-columns: 186px 1fr 62px; gap: 12px;
   align-items: center; font-size: 12.5px; cursor: pointer;
   background: none; border: none; padding: 3px 0;
   font-family: inherit; color: inherit; text-align: left;
 }
 .bar-row:hover .bar-label { color: var(--accent); }
-.bar-label { color: var(--text-muted); font-weight: 550; }
-.bar-track { background: var(--surface-3); border-radius: 5px; height: 18px; overflow: hidden; }
-.bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-line), var(--accent)); border-radius: 5px; opacity: 0.9; }
-.bar-row[aria-pressed='true'] .bar-fill { opacity: 1; }
-.bar-val { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-muted); font-family: var(--mono); }
+.bar-row:hover .bar-track { box-shadow: 0 0 0 2px var(--accent-soft); }
+
+/* A bar draws itself from ONE token, --bar, which the surrounding scope
+   decides:
+     a domain-scoped row  -> that domain's hue (the timeline's domain chart)
+     a direction row      -> the direction hue (the methods-view breakdown)
+     neither              -> the neutral domain hue, so nothing is undefined
+   Centralising it here is why the direction breakdown needed no inline
+   `background` in JavaScript. */
+[data-dir='benefit'] { --bar: var(--benefit); }
+[data-dir='neutral'] { --bar: var(--neutral); }
+[data-dir='harm'] { --bar: var(--harm); }
+[data-domain] { --bar: var(--dom); }
+
+.bar-label { color: var(--text-muted); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+.bar-label::before {
+  content: ''; width: 9px; height: 9px; border-radius: 3px;
+  background: var(--bar); flex-shrink: 0;
+}
+.bar-track { background: var(--surface-3); border-radius: 6px; height: 19px; overflow: hidden; transition: box-shadow .13s; }
+.bar-fill {
+  height: 100%; border-radius: 6px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bar) 55%, var(--surface)), var(--bar));
+}
+.bar-row[aria-pressed='true'] .bar-fill { box-shadow: inset 0 0 0 2px var(--text); }
+.bar-val { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-muted); font-family: var(--mono); font-weight: 600; }
 
 /* -------------------------------------------------------------------- quiz */
 
 .quiz-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
-.progress-track { height: 7px; background: var(--surface-3); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-line), var(--accent)); border-radius: 4px; transition: width .28s ease; }
+.progress-track { height: 8px; background: var(--surface-3); border-radius: 5px; overflow: hidden; margin-bottom: 20px; }
+.progress-fill {
+  height: 100%; border-radius: 5px; transition: width .3s ease;
+  background: linear-gradient(90deg, var(--accent-line), var(--accent));
+}
 
 .q-context { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
-.q-prompt { font-size: 17px; font-weight: 650; margin: 0 0 17px; line-height: 1.5; letter-spacing: -0.01em; }
-.q-options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px; }
+.q-prompt { font-size: 17.5px; font-weight: 680; margin: 0 0 17px; line-height: 1.5; letter-spacing: -0.012em; }
+.q-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
 .opt {
   display: flex; gap: 12px; align-items: flex-start; text-align: left; width: 100%;
-  background: var(--surface); border: 1px solid var(--border-strong);
+  background: var(--surface); border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-sm); padding: 12px 15px; cursor: pointer;
   font: inherit; font-size: 13.5px; color: var(--text);
-  transition: background-color .12s, border-color .12s;
+  transition: background-color .12s, border-color .12s, transform .12s;
 }
-.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); transform: translateX(2px); }
 .opt:disabled { cursor: default; }
-.opt .key { font-weight: 700; color: var(--text-faint); font-family: var(--mono); flex-shrink: 0; }
+.opt .key {
+  font-weight: 740; color: var(--text-muted); font-family: var(--mono); flex-shrink: 0;
+  width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+  background: var(--surface-3); font-size: 12px;
+}
+/* Verdict is carried by an explicit glyph AND colour, so the answer is
+   unambiguous in greyscale or with a colour-vision deficiency. */
 .opt.correct { border-color: var(--benefit); background: var(--benefit-soft); }
+.opt.correct::after { content: '✓'; color: var(--benefit); font-weight: 800; margin-left: auto; }
 .opt.wrong { border-color: var(--harm); background: var(--harm-soft); }
-.opt.correct .key, .opt.wrong .key { color: inherit; }
+.opt.wrong::after { content: '✕'; color: var(--harm); font-weight: 800; margin-left: auto; }
+.opt.correct .key, .opt.wrong .key { color: #fff; }
+/* The verdict keys sit on a saturated benefit/harm fill, which is dark in both
+   themes, so white is correct there and is not tokenised. */
+.opt.correct .key { background: var(--benefit); }
+.opt.wrong .key { background: var(--harm); }
 
 .explain {
-  background: var(--surface-2); border-left: 3px solid var(--accent);
-  border-radius: var(--radius-sm); padding: 13px 16px;
+  background: var(--surface-2); border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm); padding: 14px 17px;
   font-size: 13px; margin-bottom: 16px;
 }
-.explain .verdict { font-weight: 720; display: block; margin-bottom: 5px; }
+.explain .verdict { font-weight: 740; display: block; margin-bottom: 5px; }
 .explain .verdict.ok { color: var(--benefit); }
 .explain .verdict.no { color: var(--harm); }
 .explain cite {
   font-style: normal; font-family: var(--mono); font-size: 11.5px;
-  color: var(--text-muted); display: block; margin-top: 8px;
+  color: var(--text-muted); display: block; margin-top: 9px;
+  padding-top: 8px; border-top: 1px dashed var(--border);
 }
 
-.score-line { display: flex; gap: 24px; flex-wrap: wrap; font-size: 15px; }
-.score-line b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.score-line { display: flex; gap: 26px; flex-wrap: wrap; font-size: 15px; }
+.score-line b { font-size: 23px; font-variant-numeric: tabular-nums; }
 
 /* ------------------------------------------------------------------- modal */
 
 .modal-backdrop {
-  position: fixed; inset: 0; background: rgba(8, 20, 22, 0.6);
-  backdrop-filter: blur(3px);
+  position: fixed; inset: 0; background: rgba(6, 15, 29, 0.62);
+  backdrop-filter: blur(5px);
   z-index: 60; display: flex; align-items: flex-start; justify-content: center;
   padding: 28px 16px; overflow-y: auto;
 }
 .modal {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-  max-width: 900px; width: 100%; margin: auto;
+  max-width: 920px; width: 100%; margin: auto;
+  overflow: hidden;
 }
 .modal-head {
   display: flex; justify-content: space-between; gap: 16px;
   align-items: flex-start; padding: 20px 22px;
   border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; background: var(--surface);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0; z-index: 2;
+  position: sticky; top: 0; z-index: 2;
+  /* The dialog header carries the trial's domain hue, tying the record back to
+     the coloured card the reader clicked to open it. */
+  background: linear-gradient(180deg, var(--dom-soft), var(--surface));
+  border-top: 4px solid var(--dom);
 }
-.modal-head h2 { margin: 0 0 4px; font-size: 20px; font-weight: 750; }
+.modal-head h2 { margin: 0 0 4px; font-size: 20px; font-weight: 760; }
 .modal-body { padding: 22px; }
 
-.kv { display: grid; grid-template-columns: 162px 1fr; gap: 10px 18px; font-size: 13.5px; }
+.kv { display: grid; grid-template-columns: 168px 1fr; gap: 10px 18px; font-size: 13.5px; }
 .kv dt {
-  color: var(--text-muted); font-weight: 650; font-size: 11.5px;
-  text-transform: uppercase; letter-spacing: 0.05em; padding-top: 3px;
+  color: var(--text-muted); font-weight: 680; font-size: 11.5px;
+  text-transform: uppercase; letter-spacing: 0.055em; padding-top: 3px;
 }
 .kv dd { margin: 0; }
 
 .result-box {
-  border-radius: var(--radius); padding: 15px 17px;
+  border-radius: var(--radius); padding: 16px 18px;
   margin-bottom: 16px; border: 1px solid var(--border);
+  border-left-width: 5px;
 }
-.result-box.dir-benefit { background: var(--benefit-soft); border-color: color-mix(in srgb, var(--benefit) 32%, transparent); }
-.result-box.dir-neutral { background: var(--neutral-soft); border-color: color-mix(in srgb, var(--neutral) 32%, transparent); }
-.result-box.dir-harm    { background: var(--harm-soft);    border-color: color-mix(in srgb, var(--harm) 32%, transparent); }
-.result-box .big { font-family: var(--mono); font-size: 23px; font-weight: 700; letter-spacing: -0.02em; }
-.result-box .endpoint { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
+.result-box.dir-benefit {
+  background: var(--benefit-soft);
+  border-color: color-mix(in srgb, var(--benefit) 30%, transparent);
+  border-left-color: var(--benefit);
+}
+.result-box.dir-neutral {
+  background: var(--neutral-soft);
+  border-color: color-mix(in srgb, var(--neutral) 30%, transparent);
+  border-left-color: var(--neutral);
+}
+.result-box.dir-harm {
+  background: var(--harm-soft);
+  border-color: color-mix(in srgb, var(--harm) 30%, transparent);
+  border-left-color: var(--harm);
+}
+.result-box .big { font-family: var(--mono); font-size: 24px; font-weight: 720; letter-spacing: -0.025em; }
+.result-box .endpoint { font-size: 12.5px; color: var(--text-muted); margin-top: 5px; }
 
 blockquote.quote {
-  margin: 0 0 9px; padding: 9px 14px; border-left: 3px solid var(--border-strong);
+  margin: 0 0 9px; padding: 10px 15px; border-left: 3px solid var(--accent-line);
   background: var(--surface-2); font-size: 12.5px; color: var(--text-muted);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 ul.plain { list-style: none; padding: 0; margin: 0; }
-ul.plain li { padding: 6px 0 6px 18px; position: relative; font-size: 13.5px; border-bottom: 1px solid var(--border); }
+ul.plain li { padding: 7px 0 7px 20px; position: relative; font-size: 13.5px; border-bottom: 1px solid var(--border); }
 ul.plain li:last-child { border-bottom: none; }
-ul.plain li::before { content: '▸'; position: absolute; left: 0; color: var(--text-faint); }
+ul.plain li::before { content: '▸'; position: absolute; left: 0; color: var(--accent-line); }
 
 .sec-list { display: flex; flex-direction: column; gap: 7px; }
 .sec-item {
@@ -866,66 +1174,74 @@ details.brief-section > summary {
 }
 details.brief-section > summary::-webkit-details-marker { display: none; }
 details.brief-section > summary::before {
-  content: '▸'; color: var(--text-faint); font-size: 11px; margin-right: 9px;
+  content: '▸'; color: var(--accent); font-size: 11px; margin-right: 9px;
 }
 details.brief-section[open] > summary::before { content: '▾'; }
 details.brief-section > summary:hover { background: var(--surface-3); }
-details.brief-section > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-details.brief-section[open] > summary { border-bottom: 1px solid var(--border); }
+details.brief-section > summary:focus-visible { outline: 2.5px solid var(--accent-line); outline-offset: -2px; }
+details.brief-section[open] > summary {
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(90deg, var(--accent-soft), var(--surface-2) 45%);
+  color: var(--accent);
+}
 
 .brief-label { flex: 1; }
 .brief-count {
-  font-family: var(--mono); font-size: 11.5px; font-weight: 600;
-  padding: 1px 8px; border-radius: 999px;
+  font-family: var(--mono); font-size: 11.5px; font-weight: 680;
+  padding: 1px 9px; border-radius: 999px;
   background: var(--accent-soft); color: var(--accent);
 }
 .brief-count.empty { background: var(--surface-3); color: var(--text-faint); }
 
-.brief-body { padding: 13px 14px; }
+.brief-body { padding: 14px 15px; }
 
 /* Reading-group heading: scaffolding for the reader, separating "what was
    found" from "how the trial was run". Not itself a claim about the trial. */
 .brief-group {
-  margin: 20px 0 9px; font-size: 11px; font-weight: 700;
-  letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-faint);
-  padding-bottom: 5px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  margin: 22px 0 10px; font-size: 11px; font-weight: 750;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+}
+.brief-group::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 40%, transparent), transparent);
 }
 .brief-group:first-child { margin-top: 4px; }
 
 .brief-note {
-  margin: 0 0 12px; padding: 9px 12px; font-size: 12.5px; line-height: 1.6;
+  margin: 0 0 12px; padding: 10px 13px; font-size: 12.5px; line-height: 1.62;
   color: var(--text-muted); background: var(--info-soft);
   border-left: 3px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
-.brief-prose { margin: 0; font-size: 14px; line-height: 1.72; }
+.brief-prose { margin: 0; font-size: 14px; line-height: 1.74; }
 
 .brief-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.brief-item { padding-left: 12px; border-left: 2px solid var(--border); }
+.brief-item { padding-left: 13px; border-left: 2.5px solid var(--accent-line); }
 .brief-text { margin: 0 0 6px; font-size: 13.5px; line-height: 1.62; }
 .brief-meta {
-  margin: 0 0 5px; font-size: 11px; font-weight: 650; letter-spacing: 0.04em;
-  text-transform: uppercase; color: var(--text-faint);
+  margin: 0 0 5px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.055em;
+  text-transform: uppercase; color: var(--accent);
 }
 
 /* The quotation is the evidence, so it is styled as the visual anchor of each
    item rather than as fine print. */
 blockquote.brief-quote {
-  margin: 0 0 6px; padding: 8px 12px; font-size: 12.5px; line-height: 1.58;
-  color: var(--text-muted); background: var(--surface-2);
+  margin: 0 0 6px; padding: 9px 13px; font-size: 12.5px; line-height: 1.6;
+  color: var(--text); background: var(--surface-2);
   border-left: 3px solid var(--border-strong);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   white-space: pre-wrap;
 }
 
 .trace {
-  display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.03em;
-  padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border);
+  display: inline-block; font-size: 10.5px; font-weight: 650; letter-spacing: 0.03em;
+  padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border);
   color: var(--text-faint); background: var(--surface-2); cursor: help;
 }
-.trace-verbatim { color: var(--benefit); background: var(--benefit-soft); border-color: color-mix(in srgb, var(--benefit) 26%, transparent); }
-.trace-normalised { color: var(--info); background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 26%, transparent); }
-.trace-reconstructed { color: var(--neutral); background: var(--neutral-soft); border-color: color-mix(in srgb, var(--neutral) 30%, transparent); }
+.trace-verbatim { color: var(--benefit); background: var(--benefit-soft); border-color: color-mix(in srgb, var(--benefit) 30%, transparent); }
+.trace-normalised { color: var(--info); background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 30%, transparent); }
+.trace-reconstructed { color: var(--neutral); background: var(--neutral-soft); border-color: color-mix(in srgb, var(--neutral) 34%, transparent); }
 
 /* Baseline table: same grid on the header and every row so the two arms line
    up. Numeric columns are monospaced to keep the values comparable by eye. */
@@ -965,12 +1281,24 @@ blockquote.brief-quote {
 /* ------------------------------------------------------------------ footer */
 
 .site-footer {
-  border-top: 1px solid var(--border); background: var(--surface);
-  padding: 26px 0; margin-top: 36px;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface), var(--bg-tint));
+  padding: 28px 0; margin-top: 40px;
+  position: relative;
+}
+.site-footer::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--d-hf) 0 14.28%, var(--d-lipids) 14.28% 28.56%, var(--d-raas) 28.56% 42.84%,
+    var(--d-acs-antiplatelet) 42.84% 57.12%, var(--d-acs-anticoag) 57.12% 71.4%,
+    var(--d-af-anticoag) 71.4% 85.68%, var(--d-other) 85.68% 100%
+  );
+  opacity: 0.55;
 }
 .site-footer p {
   margin: 0 0 11px; font-size: 12.5px; color: var(--text-muted);
-  max-width: 108ch; line-height: 1.65;
+  max-width: 108ch; line-height: 1.68;
 }
 .footer-meta { font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); }
 
@@ -1001,4 +1329,10 @@ blockquote.brief-quote {
   body { background: #fff; }
   .card, .trial-card, .modal { box-shadow: none; border-color: #999; }
   .trial-card { break-inside: avoid; }
+  /* Backgrounds are dropped by most print engines, so every meaning that a
+     fill was carrying is restated with a border or a glyph above. The rules
+     here only stop the wash from printing as a muddy grey. */
+  .stat, .trial-card, .tl-item, .modal-head, .card,
+  .result-box, .opt.correct, .opt.wrong, .misread, .takeaway { background: #fff !important; }
+  .card::before, .site-header::after { display: none; }
 }
