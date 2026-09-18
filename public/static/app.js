@@ -547,33 +547,110 @@ function trialDetailBody(t) {
 /**
  * Ordered sections of the evidence brief.
  *
- * The order is the reading order of an evidence summary: the conclusion first,
- * then the supporting points, then the qualifying methodological detail.
+ * `group` collects the sections into the five questions a reader actually asks
+ * of a trial report, in the order they are asked. Sections are rendered in
+ * array order, so the array IS the reading order.
  *
  * `kind` selects the renderer:
  *   prose       the extractor's own sentences (guarded numerically, not quoted)
  *   claims      items carrying a verbatim quotation
  *   baseline    the two-arm characteristic table
  *   criticisms  quoted items carrying an authorship label
+ *   trials     quoted items carrying a `kind` label (conduct, methods, harms)
+ *
+ * A `note` is commentary on how to read the section. It is never a claim about
+ * the trial; it is the same kind of caveat a methods teacher would add.
  */
 const BRIEF_SECTIONS = [
-  { key: 'bottom_line', label: 'Bottom line', kind: 'prose', open: true },
-  { key: 'major_points', label: 'Major points', kind: 'claims', open: true },
-  { key: 'implications', label: 'Implications', kind: 'prose' },
+  { key: 'bottom_line', label: 'Bottom line', kind: 'prose', group: 'What the trial found', open: true },
+  { key: 'major_points', label: 'Major points', kind: 'claims', group: 'What the trial found', open: true },
+  {
+    key: 'absolute_effects',
+    label: 'Absolute effects',
+    kind: 'trials',
+    group: 'What the trial found',
+    note: 'Event rates, risk differences and numbers needed to treat, exactly as printed. Absolute figures depend on this trial\u2019s baseline risk and follow-up duration, so they do not transfer unchanged to a different population.',
+  },
+  {
+    key: 'subgroups',
+    label: 'Subgroups',
+    kind: 'trials',
+    group: 'What the trial found',
+    note: 'Subgroup results are hypothesis-generating. A trial is powered for its overall comparison, not for each subgroup, so a difference between subgroups is usually weaker evidence than the overall result.',
+  },
+  {
+    key: 'harms',
+    label: 'Harms reported',
+    kind: 'trials',
+    group: 'What the trial found',
+    note: 'Adverse events as this document reports them. This is what the article chose to report, not a systematic safety review, and a trial of this size can only exclude common harms.',
+  },
+  { key: 'implications', label: 'Implications', kind: 'prose', group: 'Reading the result' },
   {
     key: 'guidelines_referenced',
     label: 'Guidelines cited',
     kind: 'claims',
+    group: 'Reading the result',
     // Stated plainly because the distinction matters and the extractor cannot
     // bridge it: a citation is what the document contains. Whether a trial
     // CHANGED a recommendation is not established by the article text.
     note: 'Guidelines this article cites. The extraction can show that a guideline is referenced; it cannot show that this trial altered that guideline, so no such claim is made here.',
   },
-  { key: 'inclusion_criteria', label: 'Inclusion criteria', kind: 'claims' },
-  { key: 'exclusion_criteria', label: 'Exclusion criteria', kind: 'claims' },
-  { key: 'baseline', label: 'Baseline characteristics', kind: 'baseline' },
-  { key: 'criticisms', label: 'Criticisms', kind: 'criticisms' },
+  { key: 'inclusion_criteria', label: 'Inclusion criteria', kind: 'claims', group: 'Who was studied' },
+  { key: 'exclusion_criteria', label: 'Exclusion criteria', kind: 'claims', group: 'Who was studied' },
+  { key: 'baseline', label: 'Baseline characteristics', kind: 'baseline', group: 'Who was studied' },
+  { key: 'analysis_methods', label: 'Analysis methods', kind: 'trials', group: 'How it was run' },
+  { key: 'trial_conduct', label: 'Trial conduct', kind: 'trials', group: 'How it was run' },
+  {
+    key: 'funding_declarations',
+    label: 'Funding and declarations',
+    kind: 'trials',
+    group: 'How it was run',
+    note: 'Funding and competing-interest statements as printed in the document. Recording that a declaration exists is not a judgement about the result; a reader needs the fact in order to weigh it.',
+  },
+  { key: 'criticisms', label: 'Criticisms', kind: 'criticisms', group: 'Critique' },
 ];
+
+/**
+ * Human-readable label for an item's `kind` discriminator.
+ *
+ * The extractor tags each item with a category so the interface can say WHAT
+ * kind of fact it is. An unrecognised tag falls through to null and simply
+ * renders no label, rather than printing a raw machine token to the reader.
+ */
+const KIND_LABEL = {
+  // criticisms
+  author_stated: 'Stated by the trial\u2019s own authors',
+  in_document: 'Raised within the article',
+  // funding_declarations
+  funding_source: 'Funding source',
+  funder_role: 'Funder\u2019s role',
+  sponsor: 'Sponsor',
+  conflict_interest: 'Declared interests',
+  data_sharing: 'Data sharing',
+  // trial_conduct
+  registration: 'Registration',
+  ethics_approval: 'Ethics approval',
+  informed_consent: 'Informed consent',
+  oversight: 'Oversight',
+  adjudication: 'Endpoint adjudication',
+  monitoring: 'Monitoring',
+  stopping: 'Stopping',
+  // analysis_methods
+  population: 'Analysis population',
+  statistical_test: 'Statistical method',
+  power: 'Power',
+  sample_size: 'Sample size',
+  interim_analysis: 'Interim analysis',
+  adjustment: 'Adjustment',
+  // harms
+  serious: 'Serious adverse events',
+  other: 'Other adverse events',
+  discontinuation: 'Discontinuation',
+};
+
+/** The label for one item, or null when the section carries no discriminator. */
+const kindLabelOf = (item) => (item && item.kind ? KIND_LABEL[item.kind] || null : null);
 
 /**
  * Coarse traceability bucket for a quotation.
@@ -667,20 +744,13 @@ function briefSection(section, brief) {
       h('ul', { class: 'brief-list' }, ...items.map(briefBaselineRow))
     );
   } else {
+    // `kind` is optional per item, so a section whose items carry no
+    // discriminator simply renders without labels rather than with blanks.
     body.push(
       h(
         'ul',
         { class: 'brief-list' },
-        ...items.map((it) =>
-          briefClaim(
-            it,
-            section.kind === 'criticisms'
-              ? it.kind === 'author_stated'
-                ? 'Stated by the trial\u2019s own authors'
-                : 'Raised within the article'
-              : null
-          )
-        )
+        ...items.map((it) => briefClaim(it, kindLabelOf(it)))
       )
     );
   }
@@ -744,6 +814,24 @@ function loadBrief(id) {
   return pending;
 }
 
+/**
+ * Render the brief's sections, inserting a heading whenever the reading group
+ * changes. The group headings are scaffolding for the reader, not data, so they
+ * are generated from BRIEF_SECTIONS rather than stored in the payload.
+ */
+function briefSections(brief) {
+  const nodes = [];
+  let current = null;
+  for (const s of BRIEF_SECTIONS) {
+    if (s.group && s.group !== current) {
+      current = s.group;
+      nodes.push(h('h3', { class: 'brief-group', text: current }));
+    }
+    nodes.push(briefSection(s, brief));
+  }
+  return nodes;
+}
+
 async function hydrateBrief(id) {
   const brief = await loadBrief(id);
 
@@ -796,7 +884,7 @@ async function hydrateBrief(id) {
         )
       )
     ),
-    ...BRIEF_SECTIONS.map((s) => briefSection(s, brief)),
+    ...briefSections(brief),
     h(
       'p',
       { class: 'brief-foot small faint' },

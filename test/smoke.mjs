@@ -51,14 +51,28 @@ async function main() {
   console.log('\n[brief API]')
   const briefList = await (await fetch(`${BASE}/api/briefs`)).json()
   check('brief index covers every trial', briefList.trials.length === 89, `got ${briefList.trials.length}`)
-  check('brief index reports 83 verified briefs', briefList.meta.trials_with_brief === 83, `got ${briefList.meta.trials_with_brief}`)
-  check('brief index reports the 6 un-extracted trials', briefList.trials.filter((t) => t.status !== 'verified').length === 6)
-  check('brief index totals the verified claims', briefList.meta.verification.claims_verified === 2300, `got ${briefList.meta.verification.claims_verified}`)
+  check(
+    'brief index reports a brief for every trial',
+    briefList.meta.trials_with_brief === 89 && briefList.meta.trials_not_extracted === 0,
+    `${briefList.meta.trials_with_brief} with brief, ${briefList.meta.trials_not_extracted} not extracted`
+  )
+  check('no trial is left without a brief', briefList.trials.every((t) => t.status === 'verified'))
+  check(
+    'brief index totals the verified claims',
+    briefList.meta.verification.claims_verified === 4129,
+    `got ${briefList.meta.verification.claims_verified}`
+  )
   const oneBrief = await (await fetch(`${BASE}/api/briefs/jupiter`)).json()
   check('single-brief endpoint returns a verified brief', oneBrief.status === 'verified' && oneBrief.bottom_line.length > 40)
   check('single-brief endpoint 404s an unknown trial', (await fetch(`${BASE}/api/briefs/not-a-trial`)).status === 404)
-  const gapBrief = await (await fetch(`${BASE}/api/briefs/advor`)).json()
-  check('un-extracted brief is served with its reason', gapBrief.status === 'not_extracted' && gapBrief.reason === 'extraction_failed')
+  // ADVOR failed on the first extraction pass (the run hit its quota). Re-running
+  // with the extended schema recovered it, so the gap must stay closed.
+  const recoveredBrief = await (await fetch(`${BASE}/api/briefs/advor`)).json()
+  check(
+    'previously un-extracted trial now has a verified brief',
+    recoveredBrief.status === 'verified' && recoveredBrief.verified_claims > 0,
+    `${recoveredBrief.status}/${recoveredBrief.verified_claims}`
+  )
 
   const consoleErrors = []
   const virtualConsole = new VirtualConsole()
@@ -235,25 +249,53 @@ async function main() {
   await waitFor(() => document.querySelectorAll('.brief-section').length > 0, 6000, 'brief sections')
   const briefSections = [...document.querySelectorAll('.brief-section')]
   const briefLabels = briefSections.map((s) => s.querySelector('.brief-label').textContent)
-  check('brief renders all 8 sections', briefSections.length === 8, `got ${briefSections.length}`)
+  check('brief renders all 14 sections', briefSections.length === 14, `got ${briefSections.length}`)
   check('bottom line is the first section', briefLabels[0] === 'Bottom line', briefLabels[0])
   check('major points is the second section', briefLabels[1] === 'Major points', briefLabels[1])
   check(
-    'brief covers the remaining requested sections',
-    ['Guidelines cited', 'Inclusion criteria', 'Exclusion criteria', 'Baseline characteristics', 'Criticisms'].every(
-      (l) => briefLabels.includes(l)
-    ),
+    'brief covers the originally requested sections',
+    [
+      'Guidelines cited',
+      'Inclusion criteria',
+      'Exclusion criteria',
+      'Baseline characteristics',
+      'Criticisms',
+      'Implications',
+    ].every((l) => briefLabels.includes(l)),
+    briefLabels.join(', ')
+  )
+  check(
+    'brief covers the trial-mechanics sections',
+    [
+      'Absolute effects',
+      'Subgroups',
+      'Harms reported',
+      'Analysis methods',
+      'Trial conduct',
+      'Funding and declarations',
+    ].every((l) => briefLabels.includes(l)),
     briefLabels.join(', ')
   )
   check('bottom line and major points open by default', document.querySelectorAll('details.brief-section[open]').length === 2)
   check('brief leads with a bottom-line paragraph', Boolean(document.querySelector('.brief-prose')))
   check(
+    'brief groups its sections under reading headings',
+    document.querySelectorAll('.brief-group').length === 5,
+    `got ${document.querySelectorAll('.brief-group').length}`
+  )
+  check(
+    'reading groups are labelled and ordered',
+    [...document.querySelectorAll('.brief-group')].map((g) => g.textContent).join(' | ') ===
+      'What the trial found | Reading the result | Who was studied | How it was run | Critique',
+    [...document.querySelectorAll('.brief-group')].map((g) => g.textContent).join(' | ')
+  )
+  check(
     'brief summarises per-section verified counts',
-    document.querySelectorAll('.brief-pill').length === 6,
+    document.querySelectorAll('.brief-pill').length === 12,
     `got ${document.querySelectorAll('.brief-pill').length}`
   )
   const briefQuotes = document.querySelectorAll('blockquote.brief-quote')
-  check('brief anchors claims to source quotations', briefQuotes.length > 10, `got ${briefQuotes.length}`)
+  check('brief anchors claims to source quotations', briefQuotes.length > 20, `got ${briefQuotes.length}`)
   check('every claim carries a traceability tag', document.querySelectorAll('.trace').length === briefQuotes.length)
   check('baseline columns are labelled', document.querySelectorAll('.brief-baseline-head > *').length === 3)
   const baselineRows = [...document.querySelectorAll('.brief-baseline')]
@@ -262,6 +304,38 @@ async function main() {
   check(
     'brief states it cannot show a guideline was changed',
     document.body.textContent.includes('cannot show that this trial altered that guideline')
+  )
+  // The categorical sections label each item with what KIND of fact it is. An
+  // unlabelled item in one of these sections means a `kind` the interface has
+  // no wording for, which would otherwise reach the reader as a raw token.
+  const kindLabels = [...document.querySelectorAll('.brief-meta')].map((n) => n.textContent)
+  check('categorical sections label each item', kindLabels.length > 15, `got ${kindLabels.length}`)
+  check(
+    'item labels are human-readable, never raw tokens',
+    kindLabels.every((t) => /^[A-Z][a-z]/.test(t) && !/[_]/.test(t)),
+    kindLabels.filter((t) => !/^[A-Z][a-z]/.test(t) || /[_]/.test(t)).join(', ')
+  )
+  check(
+    'harms section names its adverse-event categories',
+    ['Serious adverse events', 'Other adverse events', 'Discontinuation'].some((l) => kindLabels.includes(l)),
+    kindLabels.slice(0, 12).join(', ')
+  )
+  check(
+    'analysis methods name the population and the test',
+    ['Analysis population', 'Statistical method'].every((l) => kindLabels.includes(l)),
+    kindLabels.join(', ')
+  )
+  check(
+    'the absolute-effects caveat is stated',
+    document.body.textContent.includes('do not transfer unchanged to a different population')
+  )
+  check(
+    'the subgroup caveat is stated',
+    document.body.textContent.includes('a difference between subgroups is usually weaker evidence')
+  )
+  check(
+    'the harms-coverage caveat is stated',
+    document.body.textContent.includes('not a systematic safety review')
   )
   // Every trace tag must explain itself on hover; the tag is the only thing
   // telling a reader whether an extract is byte-exact or reassembled.
@@ -276,17 +350,23 @@ async function main() {
   await waitFor(() => !document.querySelector('.modal-backdrop'), 3000, 'modal closed')
   check('Escape dismisses the modal', !document.querySelector('.modal-backdrop'))
 
-  // A trial whose brief could not be extracted must say so explicitly. An empty
-  // brief panel would read as "nothing to report", which is a different claim.
-  console.log('\n[evidence brief · not extracted]')
-  window.location.hash = '#/trial/advor'
-  await waitFor(() => document.querySelector('.modal-backdrop')?.dataset.trialId === 'advor', 4000, 'advor modal')
-  await waitFor(() => document.querySelector('.brief-gap'), 6000, 'brief gap notice')
-  check('un-extracted trial states the gap', document.querySelector('.brief-gap').textContent.includes('No evidence brief was extracted'))
-  check('un-extracted trial renders no brief sections', document.querySelectorAll('.brief-section').length === 0)
-  check('un-extracted trial still shows its verified record', Boolean(document.querySelector('.kv')))
-  window.document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
-  await waitFor(() => !document.querySelector('.modal-backdrop'), 3000, 'advor closed')
+  // Regression guard for the trials that failed the first extraction pass. They
+  // must render a real brief now, not the gap notice the interface shows when a
+  // brief is genuinely absent — an empty panel would read as "nothing to report".
+  console.log('\n[evidence brief · recovered trials]')
+  for (const id of ['advor', 'digit-hf']) {
+    window.location.hash = `#/trial/${id}`
+    await waitFor(() => document.querySelector('.modal-backdrop')?.dataset.trialId === id, 4000, `${id} modal`)
+    await waitFor(() => document.querySelectorAll('.brief-section').length > 0, 6000, `${id} brief sections`)
+    check(
+      `${id} renders a full brief rather than a gap notice`,
+      document.querySelectorAll('.brief-section').length === 14 && !document.querySelector('.brief-gap'),
+      `${document.querySelectorAll('.brief-section').length} sections`
+    )
+    check(`${id} brief anchors claims to quotations`, document.querySelectorAll('blockquote.brief-quote').length > 10)
+    window.document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await waitFor(() => !document.querySelector('.modal-backdrop'), 3000, `${id} closed`)
+  }
 
   // -------------------------------------------------------------- learn view
   console.log('\n[learn]')

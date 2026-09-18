@@ -31,30 +31,47 @@ No bindings beyond static assets — no D1, no R2, no KV, no secrets.
 | **Learn** | `#/learn` | The educational layer: a 6-step reading guide, 5 concept articles (hazard ratios, relative vs absolute effects, composite endpoints, non-inferiority, disagreeing trials) and a 37-term glossary in 6 themed groups, 16 of which carry a "common misreading" note. Inline glossary tooltips appear in the forest and compare explainers, and `?term=` deep-links to a highlighted definition. |
 | **Methods** | `#/about` | The extraction/verification pipeline, the verification ledger, coverage by domain and design, licensing, limitations, and the full API reference. |
 | **Trial detail** | `#/trial/<id>` | Modal with the primary result, secondary/subgroup results, safety signals, limitations, verbatim short extracts, full metadata and per-field provenance. |
-| **Evidence brief** | `#/trial/<id>` | Eight source-verified sections inside the trial dialog: bottom line, major points, implications, guidelines cited, inclusion criteria, exclusion criteria, baseline characteristics and criticisms. 2,300 verified claims across 83 trials, each anchored to a quotation matched back to the source document, with a per-claim traceability tag. |
+| **Evidence brief** | `#/trial/<id>` | Fourteen source-verified sections inside the trial dialog, grouped under five reading headings: bottom line, major points, absolute effects, subgroups, harms, implications, guidelines cited, inclusion criteria, exclusion criteria, baseline characteristics, analysis methods, trial conduct, funding and declarations, and criticisms. 4,129 verified claims across all 89 trials, each anchored to a quotation matched back to the source document, with a per-claim traceability tag. |
 
 Also: light/dark theme (persisted), keyboard-navigable, ARIA-labelled, print stylesheet,
 and `prefers-reduced-motion` support.
 
 ## Evidence brief
 
-Each trial can carry an eight-section **evidence brief** — the structured reading of a
-trial that a clinician actually wants: what it concluded, what it showed, what it means,
-which guidelines it cites, whom it studied, whom it excluded, how the arms compared at
-baseline, and what its weaknesses are.
+Each trial carries a fourteen-section **evidence brief** — the structured reading of a
+trial that a clinician actually wants, grouped into the five questions a reader asks of a
+trial report:
 
-Coverage: **83 of 89 trials**, **2,300 verified claims** (92% of the 2,492 extracted).
-The 6 without a brief are listed explicitly below rather than shown as empty.
+| Group | Sections |
+|---|---|
+| **What the trial found** | Bottom line, major points, absolute effects, subgroups, harms reported |
+| **Reading the result** | Implications, guidelines cited |
+| **Who was studied** | Inclusion criteria, exclusion criteria, baseline characteristics |
+| **How it was run** | Analysis methods, trial conduct, funding and declarations |
+| **Critique** | Criticisms |
+
+Coverage: **all 89 trials**, **4,129 verified claims** (91% of the 4,514 extracted).
 
 | Section | Items |
 |---|---|
-| Major points | 520 |
-| Baseline characteristics | 704 |
-| Exclusion criteria | 387 |
-| Inclusion criteria | 296 |
-| Criticisms | 232 |
-| Guidelines cited | 161 |
-| Bottom line / Implications | 83 / 83 |
+| Baseline characteristics | 685 |
+| Major points | 468 |
+| Trial conduct | 438 |
+| Analysis methods | 398 |
+| Exclusion criteria | 330 |
+| Absolute effects | 328 |
+| Harms reported | 319 |
+| Inclusion criteria | 289 |
+| Funding and declarations | 279 |
+| Criticisms | 231 |
+| Subgroups | 208 |
+| Guidelines cited | 156 |
+| Bottom line / Implications | 89 / 89 |
+
+The `kind` discriminator on the conduct, methods, harms, funding and criticism items is
+rendered as a human-readable label (e.g. `Analysis population`, `Endpoint adjudication`,
+`Declared interests`), so a reader can see what *sort* of fact each claim is without the
+interface printing a raw machine token.
 
 ### How a claim earns its place
 
@@ -100,21 +117,37 @@ Because the reconstruction above is invisible to a reader, every claim is labell
 | `verbatim · rejoined` | Contiguous after a hyphenated line break was rejoined. |
 | `reconstructed` | Every word appears in order in the source, but the extract had to be reassembled across a column break. Wording is the source's; byte-exact typography is not guaranteed. |
 
-### Trials without a brief
+### Previously missing briefs, now recovered
 
-Extraction for these six was attempted and did not complete — the language-model credits
-underlying the extraction run were exhausted mid-pipeline. They render an explicit gap
-notice, because an empty brief panel would read as a finding of "nothing to report",
-which is a different and unsupported claim. Their structured trial records — which come
-from a separate, completed pass — are unaffected.
+The first extraction pass lost six trials when the underlying language-model credits ran
+out mid-run. They were re-extracted with the extended schema and are now verified like
+every other trial:
 
 `ADVOR`, `DELIVER`, `DAPA-MI`, `EMPACT-MI`, `DIGIT-HF`, `DECISION`.
+
+The interface still renders an explicit gap notice for a trial whose brief is genuinely
+absent, because an empty brief panel would read as a finding of "nothing to report",
+which is a different and unsupported claim. That path is no longer reached by any trial
+in this dataset; a smoke test guards the recovered six against regressing into it.
+
+### What the extended sections do and do not establish
+
+Four of the new sections carry a caveat shown in the interface, because the distinction
+matters:
+
+- **Absolute effects** depend on this trial's baseline risk and follow-up duration; they
+  do not transfer unchanged to a different population.
+- **Subgroups** are hypothesis-generating. The trial is powered for its overall
+  comparison, not for each subgroup.
+- **Harms reported** is what the article chose to report, not a systematic safety review.
+- **Funding and declarations** records that a declaration exists. It is not a judgement
+  about the result; it is the fact a reader needs in order to weigh it.
 
 ### One thing the brief deliberately does not claim
 
 The section is titled **"Guidelines cited"**, not "guidelines affected". The extraction can
 show that an article *references* a guideline; it cannot show that this trial *changed* a
-recommendation. 48 of the 161 guideline items contain words like "update" purely because
+recommendation. 14 of the 156 guideline items contain words like "update" purely because
 that word appears in a guideline's own title. No causal impact is claimed.
 
 ## Data architecture
