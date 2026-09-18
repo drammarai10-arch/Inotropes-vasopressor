@@ -12,12 +12,32 @@ established from the source are rendered as absent rather than guessed.
 
 ## Public URL
 
-**Live:** https://b8bf327f-7569-435b-8ac6-9d86e947dab7.vip.gensparksite.com
+The same commit (`d9f3270`) is live on **two independent origins**, which is deliberate:
+the app has no database and no secrets, so the two hostings are interchangeable.
 
-Deployed to Cloudflare Workers for Platform (Genspark-managed account) via `gsk hosted deploy`.
-Worker `b8bf327f-7569-435b-8ac6-9d86e947dab7`, version `d44a2238-8eae-4af0-b850-f14960b67ba5`,
-447 KiB upload / 103 KiB gzip, 6 ms startup.
-No bindings beyond static assets — no D1, no R2, no KV, no secrets.
+| Origin | Platform | URL |
+|---|---|---|
+| **Cloudflare Pages** | user-owned account | https://cv-trial-evidence-base.pages.dev |
+| Workers for Platform | Genspark-managed account | https://b8bf327f-7569-435b-8ac6-9d86e947dab7.vip.gensparksite.com |
+
+**Cloudflare Pages** (user-owned account `86ab28e1…`, project `cv-trial-evidence-base`,
+production branch `main`) is deployed with wrangler:
+
+```bash
+npx wrangler pages project create cv-trial-evidence-base \
+  --production-branch main --compatibility-date 2026-09-08
+npx wrangler pages deploy dist --project-name cv-trial-evidence-base
+```
+
+91 files uploaded, 1.95 s; the compiled Worker reads its brief assets through the
+`ASSETS` binding, which Pages provides natively — the same request path used by the
+Workers for Platform build, verified working on both.
+
+**Workers for Platform** is deployed with `gsk hosted deploy`: worker
+`b8bf327f-7569-435b-8ac6-9d86e947dab7`, version `7f1348c0-…`, 482 KiB upload / 107 KiB gzip.
+
+No bindings beyond static assets on either host — no D1, no R2, no KV, no secrets, so
+neither deployment can retain anything a visitor submits.
 
 ## Features
 
